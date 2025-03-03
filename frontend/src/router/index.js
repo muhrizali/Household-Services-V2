@@ -14,6 +14,7 @@ import AdminCustomerDetails from '@/components/admin/AdminCustomerDetails.vue';
 import AdminRequestDetails from '@/components/admin/AdminRequestDetails.vue';
 import AdminServiceCreate from '@/components/admin/AdminServiceCreate.vue';
 import AdminServiceDelete from '@/components/admin/AdminServiceDelete.vue';
+import AdminServiceEdit from '@/components/admin/AdminServiceEdit.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -76,6 +77,11 @@ const router = createRouter({
               path: "service/delete/:id",
               name: "admin_service_delete",
               component: AdminServiceDelete
+            },
+            {
+              path: "service/edit/:id",
+              name: "admin_service_edit",
+              component: AdminServiceEdit
             },
             {
               path: "professional/details/:id",

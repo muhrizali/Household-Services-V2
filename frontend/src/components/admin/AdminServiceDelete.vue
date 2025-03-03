@@ -1,5 +1,5 @@
 <script setup>
-import { deleteWithParamsAPI, getWithParamsAPI } from '@/httpreqs';
+import { deleteAPI, getWithParamsAPI } from '@/httpreqs';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -26,7 +26,7 @@ onMounted(async function () {
 
 async function onDeleteClick() {
     try {
-        const response = await deleteWithParamsAPI({ url: "api/service", params: { "id": serviceID } });
+        const response = await deleteAPI({ url: "api/service", params: { "id": serviceID } });
         if (response.data.deleted) {
             message.value = "Service Deleted Successfully\nRedirecting back to home";
             setTimeout(() => router.push({ name: "admin_home" }), 2000);

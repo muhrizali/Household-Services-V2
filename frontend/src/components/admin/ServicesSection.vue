@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
-import { deleteWithParamsAPI, getAPI } from '@/httpreqs';
+import { deleteAPI, getAPI } from '@/httpreqs';
 
 const services = ref([]);
 
@@ -10,10 +10,10 @@ const selectAll = ref(false);
 
 const message = ref("");
 
-onMounted(async function () {
+async function onInitialLoad() {
     const response = await getAPI({ url: "/api/service", params: { all: true } });
     services.value = response.data.services;
-});
+}
 
 
 function onToggleSelect() {
@@ -31,12 +31,15 @@ watch(selectAll, async (newVal, oldVal) => {
 
 async function onDeleteSelectedClick() {
     try {
-        const response = await deleteWithParamsAPI({ url: "/api/service", params: { ids: selectedIDs.value } });
+        const response = await deleteAPI({ url: "/api/service", params: { ids: selectedIDs.value } });
         if (response.data.deleted) {
             selectMode.value = false;
             message.value = "Services Deleted Successfully";
             setTimeout(() => {
                 message.value = "";
+                selectedIDs.value = [];
+                onInitialLoad();
+                
             }, 2000);
         }
     } catch {
@@ -44,10 +47,12 @@ async function onDeleteSelectedClick() {
         message.value = "Some Error Occured";
         setTimeout(() => {
             message.value = "";
+            selectedIDs.value = [];
         }, 2000);
     }
 }
 
+onMounted(onInitialLoad);
 
 </script>
 
@@ -94,11 +99,11 @@ async function onDeleteSelectedClick() {
                         <td>{{ service.created }}</td>
                         <td>
                             <span class="flex gap-2">
-                                <RouterLink to="">
+                                <RouterLink :to="{ name: 'admin_service_edit', params: { id: service.id } }">
                                     <button class="btn btn-sm btn-warning">✏️ EDIT</button>
                                 </RouterLink>
                                 <RouterLink :to="{ name: 'admin_service_delete', params: { id: service.id } }">
-                                    <button class="btn btn-sm btn-error">🗑️ Delete</button>
+                                    <button class="btn btn-sm btn-error">🗑️ DELETE</button>
                                 </RouterLink>
                             </span>
                         </td>
@@ -111,8 +116,6 @@ async function onDeleteSelectedClick() {
 
             <!-- Add Service button -->
             <div class="flex items-center justify-end gap-2">
-                {{ selectAll }}
-                {{ selectedIDs }}
                 <button @click="onToggleSelect" class="btn btn-sm btn-info">
                     {{ selectMode ? "❌ UNSELECT" : "✅ SELECT" }}
                 </button>

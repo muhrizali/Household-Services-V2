@@ -1,6 +1,6 @@
 from models import db, User, Customer, Professional, Service, ServiceRequest
 from flask import session
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, update
 from sqlalchemy.sql import or_, and_
 from bcrypt import gensalt, hashpw, checkpw
 
@@ -33,8 +33,11 @@ def check_pw(entered, hashed):
 # MODELS
 
 # GETTING MULTIPLES
-def get_all(model):
-    sql = select(model).order_by(model.id)
+def get_all(model, ids=None):
+    if ids:
+        sql = select(model).where(model.id.in_(ids)).order_by(model.id)
+    else:
+        sql = select(model).order_by(model.id)
     results = db.session.scalars(sql)
     return results
 
@@ -57,6 +60,13 @@ def delete_all_with_ids(model, ids):
 
 def delete_services_with_ids(ids):
     delete_all_with_ids(Service, ids)
+
+def update_professional_status(ids, approval):
+    profs = get_all(Professional, ids=ids)
+    for prof in profs:
+        prof.approval = approval
+    db.session.commit()
+
 
 # GETTING SINGLES
 def get_with_id(model, pkid):
@@ -85,8 +95,15 @@ def get_user_with_creds(email, passwd):
     user = db.session.scalars(sql).first()
     if user and check_pw(passwd, user.password):
         return user
-    else:
-        return None
+    return None
+
+def update_service_with_id(id, editdata):
+    service = get_service_with_id(id)
+    service.name = editdata.get("name")
+    service.description = editdata.get("description")
+    service.price = editdata.get("price")
+    service.timereq = editdata.get("timereq")
+    db.session.commit()
 
 def delete_with_id(model, pkid):
     sql = delete(model).where(model.id == pkid)

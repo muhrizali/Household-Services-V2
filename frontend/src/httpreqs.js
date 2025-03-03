@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "axios";
 
 const baseConfig = {
     baseURL: "http://127.0.0.1:5000",
@@ -6,29 +6,37 @@ const baseConfig = {
     withCredentials: true,
 };
 
-function getAPI({ url }) {
-    return axios.get(url, baseConfig);
+async function getAPI({ url, params }) {
+    if (params) {
+        return await axios.get(url, { ...baseConfig, params });
+    }
+    return await axios.get(url, baseConfig);
 }
 
-function getWithParamsAPI({ url, params }) {
-    return axios.get(url, {
-        ...baseConfig,
-        params: params,
-    });
+async function getWithParamsAPI({ url, params }) {
+    return await axios.get(url, { ...baseConfig, params });
 }
 
-function deleteWithParamsAPI({ url, params }) {
-    return axios.delete(url, {
-        ...baseConfig,
-        params: params,
-        paramsSerializer: {
-            indexes: true
-        }
-    })
+async function deleteAPI({ url, params }) {
+    if (params) {
+        return await axios.delete(url, { 
+            ...baseConfig,
+            params,
+            paramsSerializer: {
+                indexes: null
+            }
+        });
+    }
+    return await axios.delete(url, baseConfig);
+
 }
 
-function postAPI({ url, data }) {
-    return axios.post(url, data, baseConfig);
+async function postAPI({ url, data }) {
+    return await axios.post(url, data, baseConfig);
 }
 
-export { getAPI, getWithParamsAPI, postAPI, deleteWithParamsAPI };
+async function putAPI({ url, data }) {
+    return await axios.put(url, data, baseConfig);
+}
+
+export { getAPI, getWithParamsAPI, postAPI, putAPI, deleteAPI };

@@ -59,6 +59,18 @@ class ProfessionalAPI(Resource):
         except:
             resp = { "message": "Error While Registering User" }
             return resp, 400
+    
+    def put(self):
+        req = request.get_json()
+        
+        if req.get("approve_selected"):
+            update_professional_status(ids=req.get("ids"), approval="APPROVED")
+            return jsonify({ "edited": True })
+        
+        if req.get("reject_selected"):
+            update_professional_status(ids=req.get("ids"), approval="REJECTED")
+            return jsonify({ "edited": True })
+                
 
 
 class CustomerAPI(Resource):
@@ -114,9 +126,18 @@ class ServiceAPI(Resource):
             delete_service_with_id(req.get("id"))
             return jsonify({ "deleted": True })
         elif req.get("ids"):
-            print(req.get("ids"))
-            delete_services_with_ids(req.get("ids"))
+            print(req.getlist("ids"))
+            delete_services_with_ids(req.getlist("ids"))
             return jsonify({ "deleted": True })
+    
+    def put(self):
+        req = request.json
+        try:
+            update_service_with_id(req.get("id"), req)
+            return jsonify({ "edited": True })
+        except:
+            return jsonify({ "edited": False })
+        
         
 
 
