@@ -87,16 +87,16 @@ onMounted(async function () {
                         </tr>
                     </tbody>
                 </table>
-    
+
                 <!-- Professional Actions -->
-                <div class="flex items-center justify-end gap-2">
-                    <a href="">
-                        <button class="btn btn-sm btn-success">Approve</button>
-                    </a>
-                    <a href="">
-                        <button class="btn btn-sm btn-error">Reject</button>
-                    </a>
-                </div>
+                <span class="flex justify-end gap-2">
+                    <RouterLink :to="{ name: 'admin_professional_approve', params: { id: professional.id } }">
+                        <button class="btn btn-sm btn-success">👍 APPROVE</button>
+                    </RouterLink>
+                    <RouterLink :to="{ name: 'admin_professional_reject', params: { id: professional.id } }">
+                        <button class="btn btn-sm btn-error">👎 REJECT</button>
+                    </RouterLink>
+                </span>
             </div>
             <div v-else>
                 <p class="text-center text-lg font-bold">Requested Professional Not Found</p>

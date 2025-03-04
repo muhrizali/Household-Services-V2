@@ -66,14 +66,14 @@ onMounted(async function () {
                 </table>
 
                 <!-- Customer Actions -->
-                <div class="flex items-center justify-end gap-4">
-                    <a href="">
-                        <button class="btn btn-sm btn-success">Activate</button>
-                    </a>
-                    <a href="">
-                        <button class="btn btn-sm btn-error">Block</button>
-                    </a>
-                </div>
+                <span class="flex justify-end gap-2">
+                    <RouterLink :to="{ name: 'admin_customer_activate', params: { id: customer.id } }">
+                        <button class="btn btn-sm btn-success">ACTIVATE</button>
+                    </RouterLink>
+                    <RouterLink :to="{ name: 'admin_customer_block', params: { id: customer.id } }">
+                        <button class="btn btn-sm btn-error">BLOCK</button>
+                    </RouterLink>
+                </span>
             </div>
             <div v-else>
                 <p class="text-center text-lg font-bold">Requested Customer Not Found</p>

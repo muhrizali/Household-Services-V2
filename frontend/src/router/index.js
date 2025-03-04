@@ -17,6 +17,9 @@ import AdminServiceDelete from '@/components/admin/AdminServiceDelete.vue';
 import AdminServiceEdit from '@/components/admin/AdminServiceEdit.vue';
 import AdminProfessionalApprove from '@/components/admin/AdminProfessionalApprove.vue';
 import AdminProfessionalReject from '@/components/admin/AdminProfessionalReject.vue';
+import AdminCustomerActivate from '@/components/admin/AdminCustomerActivate.vue';
+import AdminCustomerBlock from '@/components/admin/AdminCustomerBlock.vue';
+import AdminDashboardView from '@/views/AdminDashboardView.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -55,10 +58,11 @@ const router = createRouter({
     },
     {
       path: "/user",
-      component: DashboardView,
+      // component: DashboardView,
       children: [
         {
           path: "admin",
+          component: AdminDashboardView,
           children: [
             {
               path: "",
@@ -104,6 +108,16 @@ const router = createRouter({
               path: "customer/details/:id",
               name: "admin_customer_details",
               component: AdminCustomerDetails
+            },
+            {
+              path: "customer/activate/:id",
+              name: "admin_customer_activate",
+              component: AdminCustomerActivate
+            },
+            {
+              path: "customer/block/:id",
+              name: "admin_customer_block",
+              component: AdminCustomerBlock
             },
             {
               path: "request/details/:id",

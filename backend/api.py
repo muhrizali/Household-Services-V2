@@ -97,6 +97,15 @@ class CustomerAPI(Resource):
             resp = { "message": "Error While Registering User" }
             return resp, 400
 
+    def put(self):
+        req = request.get_json()
+        if req.get("activate_selected"):
+            update_customer_status(ids=req.get("ids"), status="ACTIVE")
+            return jsonify({ "edited": True })
+        
+        if req.get("block_selected"):
+            update_customer_status(ids=req.get("ids"), status="BLOCKED")
+            return jsonify({ "edited": True })
 
 # services
 class ServiceAPI(Resource):

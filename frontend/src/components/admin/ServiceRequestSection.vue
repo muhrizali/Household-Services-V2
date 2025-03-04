@@ -46,12 +46,12 @@ onMounted(async function () {
                             <span v-else class="badge badge-lg badge-success">CLOSED</span>
                         </td>
                         <td>
-                            <span>
+                            <span class="flex gap-2">
                                 <a href="">
-                                    <button class="btn btn-sm btn-warning">Edit</button>
+                                    <button class="btn btn-sm btn-warning">EDIT</button>
                                 </a>
                                 <a href="">
-                                    <button class="btn btn-sm btn-error">Delete</button>
+                                    <button class="btn btn-sm btn-error">DELETE</button>
                                 </a>
                             </span>
                         </td>

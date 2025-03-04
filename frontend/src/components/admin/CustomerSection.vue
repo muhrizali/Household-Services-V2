@@ -38,13 +38,13 @@ onMounted(async function () {
                         </td>
                         <td>{{ customer.created }}</td>
                         <td>
-                            <span>
-                                <a href="">
-                                    <button class="btn btn-sm btn-success">Activate</button>
-                                </a>
-                                <a href="">
-                                    <button class="btn btn-sm btn-error">Block</button>
-                                </a>
+                            <span class="flex gap-2">
+                                <RouterLink :to="{ name: 'admin_customer_activate', params: { id: customer.id } }">
+                                    <button class="btn btn-sm btn-success">ACTIVATE</button>
+                                </RouterLink>
+                                <RouterLink :to="{ name: 'admin_customer_block', params: { id: customer.id } }">
+                                    <button class="btn btn-sm btn-error">BLOCK</button>
+                                </RouterLink>
                             </span>
                         </td>
                     </tr>

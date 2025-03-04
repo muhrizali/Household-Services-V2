@@ -62,9 +62,15 @@ def delete_services_with_ids(ids):
     delete_all_with_ids(Service, ids)
 
 def update_professional_status(ids, approval):
-    profs = get_all(Professional, ids=ids)
+    profs = get_all_professionals(ids=ids)
     for prof in profs:
         prof.approval = approval
+    db.session.commit()
+
+def update_customer_status(ids, status):
+    customers = get_all_customers(ids=ids)
+    for customer in customers:
+        customer.status = status
     db.session.commit()
 
 
