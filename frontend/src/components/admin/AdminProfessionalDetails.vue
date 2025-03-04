@@ -11,7 +11,7 @@ const message = ref("");
 
 onMounted(async function () {
     try {
-        const response = await getWithParamsAPI({ url: "api/professional", params: { "id": professionalID } });
+        const response = await getWithParamsAPI({ url: "/api/professional", params: { "id": professionalID } });
         if (response.data.found) {
             professionalFound.value = true;
             professional.value = response.data.professional;

@@ -126,12 +126,12 @@ onMounted(onInitialLoad);
                         <td>{{ prof.created }}</td>
                         <td>
                             <span class="flex gap-2">
-                                <a href="">
+                                <RouterLink :to="{ name: 'admin_professional_approve', params: { id: prof.id } }">
                                     <button class="btn btn-sm btn-success">👍 APPROVE</button>
-                                </a>
-                                <a href="">
+                                </RouterLink>
+                                <RouterLink :to="{ name: 'admin_professional_reject', params: { id: prof.id } }">
                                     <button class="btn btn-sm btn-error">👎 REJECT</button>
-                                </a>
+                                </RouterLink>
                             </span>
                         </td>
                     </tr>

@@ -41,17 +41,17 @@ def get_all(model, ids=None):
     results = db.session.scalars(sql)
     return results
 
-def get_all_customers():
-    return get_all(Customer)
+def get_all_customers(ids=None):
+    return get_all(Customer, ids=ids)
 
-def get_all_professionals():
-    return get_all(Professional)
+def get_all_professionals(ids=None):
+    return get_all(Professional, ids=ids)
 
-def get_all_services():
-    return get_all(Service)
+def get_all_services(ids=None):
+    return get_all(Service, ids=ids)
 
-def get_all_requests():
-    return get_all(ServiceRequest)
+def get_all_requests(ids=None):
+    return get_all(ServiceRequest, ids=ids)
 
 def delete_all_with_ids(model, ids):
     sql = delete(model).where(model.id.in_(ids))

@@ -40,7 +40,7 @@ class ProfessionalAPI(Resource):
     def get(self):
         req = request.args
         if req.get("id"):
-            professional = get_professional_with_id(id = req["id"])
+            professional = get_professional_with_id(id = req.get("id"))
             if professional:
                 return jsonify({ "professional": professional.to_dict(), "found": True })
             else:
@@ -62,7 +62,6 @@ class ProfessionalAPI(Resource):
     
     def put(self):
         req = request.get_json()
-        
         if req.get("approve_selected"):
             update_professional_status(ids=req.get("ids"), approval="APPROVED")
             return jsonify({ "edited": True })

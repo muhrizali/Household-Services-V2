@@ -15,6 +15,8 @@ import AdminRequestDetails from '@/components/admin/AdminRequestDetails.vue';
 import AdminServiceCreate from '@/components/admin/AdminServiceCreate.vue';
 import AdminServiceDelete from '@/components/admin/AdminServiceDelete.vue';
 import AdminServiceEdit from '@/components/admin/AdminServiceEdit.vue';
+import AdminProfessionalApprove from '@/components/admin/AdminProfessionalApprove.vue';
+import AdminProfessionalReject from '@/components/admin/AdminProfessionalReject.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -87,6 +89,16 @@ const router = createRouter({
               path: "professional/details/:id",
               name: "admin_professional_details",
               component: AdminProfessionalDetails
+            },
+            {
+              path: "professional/approve/:id",
+              name: "admin_professional_approve",
+              component: AdminProfessionalApprove
+            },
+            {
+              path: "professional/reject/:id",
+              name: "admin_professional_reject",
+              component: AdminProfessionalReject
             },
             {
               path: "customer/details/:id",
