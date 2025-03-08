@@ -385,7 +385,7 @@ def get_all_requests():
     print()
     print("Getting All Service Requests:")
     for req in requests:
-        print(f"{req.id}, {req.service_id}, {req.professional_id}, {req.status}")
+        print(f"{req.id}, {req.service_id}, {req.customer.id}, {req.professional_id}, {req.status}")
 
 
 
@@ -457,10 +457,8 @@ def rm_data():
     rm_all_users()
     rm_all_requests()
 
-# rm_data()
-# create_dummy_admin()
-# create_dummy_custs()
 # create_dummy_data()
+# rm_data()
 get_data()
 
 

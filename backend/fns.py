@@ -93,8 +93,7 @@ def get_request_with_id(id):
     return get_with_id(ServiceRequest, id)
 
 def get_user_with_id(id):
-    user = get_with_id(User, id)
-    return user
+    return get_with_id(User, id)
 
 def get_user_with_creds(email, passwd):
     sql = select(User).filter(User.email == email)

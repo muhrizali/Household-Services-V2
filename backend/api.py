@@ -152,14 +152,12 @@ class ServiceAPI(Resource):
 # service requests
 class ServiceRequestAPI(Resource):
     def get(self):
-        req = request.args
-        if req.get("id"):
-            service_request = get_request_with_id(id = req["id"])
+        reqs = request.args
+        if reqs.get("id"):
+            service_request = get_request_with_id(id = reqs.get("id"))
             if service_request:
                 return jsonify({ "service_request": service_request.to_dict(), "found": True })
-            else:
-                return jsonify({ "found": False })
-        # if req.get("all"):
+            return jsonify({ "found": False })
         service_requests = get_all_requests()
         data = [service_request.to_dict() for service_request in service_requests]
         return jsonify({ "requests": data })

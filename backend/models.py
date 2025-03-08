@@ -344,7 +344,7 @@ class ServiceRequest(db.Model):
             "professional": self.professional(),
             "customer": self.customer.to_dict(),
             "status": self.status,
-            "rating": self.rating,
+            "rating": self.rating or "??",
             "stars": self.stars(),
             "remarks": self.remarks,
             "completed": self.completed_time(),
