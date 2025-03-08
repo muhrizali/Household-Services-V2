@@ -1,6 +1,9 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { getAPI, putAPI } from '@/httpreqs';
+
+const props = defineProps(['items']);
+
 const professionals = ref([]);
 
 const selectMode = ref(false);
@@ -10,7 +13,7 @@ const selectAll = ref(false);
 const message = ref("");
 
 
-async function onInitialLoad() {
+async function initialLoad() {
     const response = await getAPI({ url: "/api/professional" });
     professionals.value = response.data.professionals;
 }
@@ -22,13 +25,6 @@ function onToggleSelect() {
     selectedIDs.value = [];
 }
 
-watch(selectAll, async (newVal, oldVal) => {
-    if (newVal) {
-        selectedIDs.value = professionals.value.map((prof) => prof.id);
-    } else {
-        selectedIDs.value = [];
-    }
-});
 
 async function onApproveSelectedClick() {
     try {
@@ -44,7 +40,7 @@ async function onApproveSelectedClick() {
     setTimeout(() => {
         message.value = "";
         selectedIDs.value = [];
-        onInitialLoad();
+        initialLoad();
     }, 1000);
 }
 
@@ -62,11 +58,29 @@ async function onRejectSelectedClick() {
     setTimeout(() => {
         message.value = "";
         selectedIDs.value = [];
-        onInitialLoad();
+        initialLoad();
     }, 1000);
 }
 
-onMounted(onInitialLoad);
+watch(() => props.items, (newItems, oldItems) => {
+    professionals.value = newItems;
+})
+
+watch(selectAll, async (newVal, oldVal) => {
+    if (newVal) {
+        selectedIDs.value = professionals.value.map((prof) => prof.id);
+    } else {
+        selectedIDs.value = [];
+    }
+});
+
+onMounted(async function () {
+    if (props.items.length) {
+        professionals.value = props.items;
+    } else {
+        initialLoad();
+    }
+});
 
 </script>
 <template>
@@ -106,7 +120,7 @@ onMounted(onInitialLoad);
                 <tbody>
                     <tr v-if="professionals.length" v-for="prof in professionals" :key="prof.id">
                         <td v-show="selectMode">
-                            <input type="checkbox" :value="prof.id" v-model="selectedIDs">
+                            <input type="checkbox" :value="prof.id" v-model="selectedIDs" />
                         </td>
                         <td>
                             <RouterLink :to="{ name: 'admin_professional_details', params: { id: prof.id } }">

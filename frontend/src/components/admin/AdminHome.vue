@@ -2,15 +2,15 @@
 import AdminServicesSection from './AdminServicesSection.vue';
 import AdminProfessionalSection from './AdminProfessionalSection.vue';
 import AdminCustomerSection from './AdminCustomerSection.vue';
-import AdminServiceRequestSection from './AdminServiceRequestSection.vue';
+import AdminRequestSection from './AdminRequestSection.vue';
 </script>
 <template>
     <!-- SERVICES SECTION -->
-    <AdminServicesSection />
+    <AdminServicesSection :items="[]" />
     <!-- PROFESSIONALS SECTION -->
-    <AdminProfessionalSection />
+    <AdminProfessionalSection :items="[]" />
     <!-- CUSTOMERS SECTION -->
-    <AdminCustomerSection />
+    <AdminCustomerSection :items="[]" />
     <!-- REQUESTS SECTION -->
-    <AdminServiceRequestSection />
+    <AdminRequestSection :items="[]" />
 </template>

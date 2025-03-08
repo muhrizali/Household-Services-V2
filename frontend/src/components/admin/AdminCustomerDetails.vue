@@ -68,10 +68,10 @@ onMounted(async function () {
                 <!-- Customer Actions -->
                 <span class="flex justify-end gap-2">
                     <RouterLink :to="{ name: 'admin_customer_activate', params: { id: customer.id } }">
-                        <button class="btn btn-sm btn-success">ACTIVATE</button>
+                        <button class="btn btn-sm btn-success">✅ ACTIVATE</button>
                     </RouterLink>
                     <RouterLink :to="{ name: 'admin_customer_block', params: { id: customer.id } }">
-                        <button class="btn btn-sm btn-error">BLOCK</button>
+                        <button class="btn btn-sm btn-error">❌ BLOCK</button>
                     </RouterLink>
                 </span>
             </div>

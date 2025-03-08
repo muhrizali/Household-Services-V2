@@ -47,7 +47,7 @@ async function onEditClick() {
 
 onMounted(async function () {
     try {
-        const response = await getWithParamsAPI({ url: "/api/request", params: { "id": serviceRequestID } });
+        const response = await getAPI({ url: "/api/request", params: { "id": serviceRequestID } });
         if (response.data.found) {
             serviceRequest.value = response.data.service_request;
             serviceRequestFound.value = true;

@@ -324,8 +324,7 @@ class ServiceRequest(db.Model):
     customer: Mapped["Customer"] = relationship(back_populates="service_requests")
 
     # service requests specific: "REQUESTED", "ASSIGNED", "CLOSED"
-    status: Mapped[Optional[str]] = mapped_column(
-        String(10), default="REQUESTED")
+    status: Mapped[Optional[str]] = mapped_column(String(10), default="REQUESTED")
 
     rating: Mapped[Optional[int]] = mapped_column(Integer)  # from 1 to 5
     remarks: Mapped[Optional[str]] = mapped_column(Text)
@@ -506,19 +505,15 @@ def get_profs_with_param(param, query):
     results = None
     if param == "prof_name":
         sql = select(Professional).join(User).where(User.fullname.ilike(query))
-        results = db.session.scalars(sql)
     elif param == "prof_email":
         sql = select(Professional).join(User).where(User.email.ilike(query))
-        results = db.session.scalars(sql)
     elif param == "prof_contact":
         sql = select(Professional).where(Professional.contact.ilike(query))
-        results = db.session.scalars(sql)
     elif param == "prof_address":
         sql = select(Professional).where(Professional.address.ilike(query))
-        results = db.session.scalars(sql)
     elif param == "prof_pincode":
         sql = select(Professional).where(Professional.pincode.ilike(query))
-        results = db.session.scalars(sql)
+    results = db.session.scalars(sql)
     return results
 
 
@@ -558,7 +553,7 @@ def get_requests_with_param(param, query):
         sql = select(ServiceRequest).join(Service).where(Service.name.ilike(query))
         results = db.session.scalars(sql)
     elif param == "request_customer":
-        sql = select(ServiceRequest).join(Customer, ServiceRequest.customer_id == Customer.id).join(User, Customer.user_id == User.id).filter(User.fullname.ilike(query))
+        sql = select(ServiceRequest).join(Customer, ServiceRequest.customer_id == Customer.id).join(User, Customer.user_id == User.id).where(User.fullname.ilike(query))
         results = db.session.scalars(sql)
     elif param == "request_prof":
         sql = select(ServiceRequest).join(Professional, ServiceRequest.professional_id == Professional.id).join(User, Professional.user_id == User.id).where(User.fullname.ilike(query))

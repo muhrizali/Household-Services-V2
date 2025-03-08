@@ -17,7 +17,7 @@ import { RouterLink, RouterView } from 'vue-router';
           <ul class="menu menu-lg menu-horizontal">
 
             <li><RouterLink :to="{ name: 'admin_home' }" class="btn btn-ghost">Home</RouterLink></li>
-            <li><RouterLink to="" class="btn btn-ghost">Search</RouterLink></li>
+            <li><RouterLink :to="{ name: 'admin_search' }" class="btn btn-ghost">Search</RouterLink></li>
           </ul>
         </div>
         <div class="navbar-end">

@@ -83,11 +83,11 @@ onMounted(async function () {
                 <!-- Service Request Actions -->
                 <div class="flex justify-end gap-2">
                     <RouterLink :to="{ name: 'admin_request_edit', params: { id: serviceRequest.id } }">
-                        <button class="btn btn-sm btn-warning">Edit</button>
+                        <button class="btn btn-sm btn-warning">✏️ EDIT</button>
                     </RouterLink>
-                    <a href="">
-                        <button class="btn btn-sm btn-error">Delete</button>
-                    </a>
+                    <RouterLink :to="{ name: 'admin_request_delete', params: { id: serviceRequest.id } }">
+                        <button class="btn btn-sm btn-error">🗑️ DELETE</button>
+                    </RouterLink>
                 </div>
             </div>
             <div v-else>

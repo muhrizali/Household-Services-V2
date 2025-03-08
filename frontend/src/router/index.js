@@ -21,6 +21,8 @@ import AdminCustomerActivate from '@/components/admin/AdminCustomerActivate.vue'
 import AdminCustomerBlock from '@/components/admin/AdminCustomerBlock.vue';
 import AdminDashboardView from '@/views/AdminDashboardView.vue';
 import AdminRequestEdit from '@/components/admin/AdminRequestEdit.vue';
+import AdminRequestDelete from '@/components/admin/AdminRequestDelete.vue';
+import AdminSearch from '@/components/admin/AdminSearch.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -129,6 +131,16 @@ const router = createRouter({
               path: "request/edit/:id",
               name: "admin_request_edit",
               component: AdminRequestEdit
+            },
+            {
+              path: "request/delete/:id",
+              name: "admin_request_delete",
+              component: AdminRequestDelete
+            },
+            {
+              path: "search/",
+              name: "admin_search",
+              component: AdminSearch
             },
           ]
         },

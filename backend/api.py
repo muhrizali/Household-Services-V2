@@ -88,9 +88,9 @@ class CustomerAPI(Resource):
 
     # adding new customer
     def post(self):
-        new_user = request.json
+        new_user = request.get_json()
         try:
-            add_customer_user(new_user['user'], new_user['customer'])
+            add_customer_user(new_user.get('user'), new_user.get('customer'))
             resp = { "message": "Customer Successfully Added" }
             return resp
         except:
@@ -112,14 +112,20 @@ class ServiceAPI(Resource):
     def get(self):
         req = request.args
         if req.get("id"):
-            service = get_service_with_id(id = req["id"])
+            service = get_service_with_id(id = req.get("id"))
             if service:
                 return jsonify({ "service": service.to_dict(), "found": True })
             else:
                 return jsonify({ "found": False })
+        if req.get("ids"):
+            services = get_all_services(ids = req.get("ids"))
+            if services:
+                data = [service.to_dict() for service in services]
+                return jsonify({ "services": data })
         services = get_all_services()
-        data = [service.to_dict() for service in services]
-        return jsonify({ "services": data })
+        if services:
+            data = [service.to_dict() for service in services]
+            return jsonify({ "services": data })
     
     def post(self):
         new_service_data = request.json
@@ -131,10 +137,9 @@ class ServiceAPI(Resource):
     def delete(self):
         req = request.args
         if req.get("id"):
-            delete_service_with_id(req.get("id"))
+            delete_services_with_ids([req.get("id")])
             return jsonify({ "deleted": True })
         elif req.get("ids"):
-            print(req.getlist("ids"))
             delete_services_with_ids(req.getlist("ids"))
             return jsonify({ "deleted": True })
     
@@ -162,7 +167,42 @@ class ServiceRequestAPI(Resource):
         data = [service_request.to_dict() for service_request in service_requests]
         return jsonify({ "requests": data })
 
-    
+    def delete(self):
+        req = request.args
+        if req.get("id"):
+            delete_requests_with_ids([req.get("id")])
+            return jsonify({ "deleted": True })
+        elif req.get("ids"):
+            delete_requests_with_ids(req.getlist("ids"))
+            return jsonify({ "deleted": True })
+
+
+class SearchAPI(Resource):
+    def get(self):
+        reqs = request.args
+        parameter = reqs.get("parameter")
+        query = reqs.get("query")
+
+        if parameter.startswith("professional"):
+            professionals = search_objects(parameter, query)
+            results = [professional.to_dict() for professional in professionals]
+            return jsonify({ "found": True, "type": "PROFESSIONAL", "results": results })
+        
+        elif parameter.startswith("customer"):
+            customers = search_objects(parameter, query)
+            results = [customer.to_dict() for customer in customers]
+            return jsonify({ "found": True, "type": "CUSTOMER", "results": results })
+        
+        elif parameter.startswith("service"):
+            services = search_objects(parameter, query)
+            results = [service.to_dict() for service in services]
+            return jsonify({ "found": True, "type": "SERVICE", "results": results })
+        
+        elif parameter.startswith("request"):
+            service_requests = search_objects(parameter, query)
+            results = [service_request.to_dict() for service_request in service_requests]
+            return jsonify({ "found": True, "type": "SERVICE_REQUEST", "results": results })
+
         
 
         
@@ -193,6 +233,8 @@ api.add_resource(ProfessionalAPI, "/api/professional")
 api.add_resource(CustomerAPI, "/api/customer")
 api.add_resource(ServiceAPI, "/api/service")
 api.add_resource(ServiceRequestAPI, "/api/request")
+
+api.add_resource(SearchAPI, "/api/search")
 
 # testing APIs
 api.add_resource(TestAPI, "/api/test")
