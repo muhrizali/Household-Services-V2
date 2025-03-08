@@ -9,7 +9,7 @@ import { RouterLink, RouterView } from 'vue-router';
       <nav class="navbar bg-primary">
         <div class="navbar-start">
           <RouterLink to="/testing" class="btn btn-lg btn-ghost text-2xl">
-            Welcome, Customer <span class="opacity-60">[CUSTOMER]</span>
+            Welcome, (Name) <span class="opacity-60">[CUSTOMER]</span>
           </RouterLink>
         </div>
 

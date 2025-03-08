@@ -11,7 +11,7 @@ const message = ref("");
 
 onMounted(async function () {
     try {
-        const response = await getWithParamsAPI({ url: "api/request", params: { "id": serviceRequestID } });
+        const response = await getWithParamsAPI({ url: "/api/request", params: { "id": serviceRequestID } });
         if (response.data.found) {
             serviceRequestFound.value = true;
             serviceRequest.value = response.data.service_request;
@@ -29,7 +29,7 @@ onMounted(async function () {
         <div class="card-body">
             <div v-if="serviceRequestFound">
                 <h2 class="card-title text-lg">Service Request Details:</h2>
-                <table class="table table-lg">
+                <table class="table table-sm">
                     <tbody>
                         <tr>
                             <td class="text-lg font-bold underline">ID:</td>
@@ -81,10 +81,10 @@ onMounted(async function () {
                 </table>
 
                 <!-- Service Request Actions -->
-                <div class="flex items-center justify-end gap-2">
-                    <a href="">
+                <div class="flex justify-end gap-2">
+                    <RouterLink :to="{ name: 'admin_request_edit', params: { id: serviceRequest.id } }">
                         <button class="btn btn-sm btn-warning">Edit</button>
-                    </a>
+                    </RouterLink>
                     <a href="">
                         <button class="btn btn-sm btn-error">Delete</button>
                     </a>

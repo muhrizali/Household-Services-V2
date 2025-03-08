@@ -47,9 +47,9 @@ onMounted(async function () {
                         </td>
                         <td>
                             <span class="flex gap-2">
-                                <a href="">
+                                <RouterLink :to="{ name: 'admin_request_edit', params: { id: request.id } }">
                                     <button class="btn btn-sm btn-warning">EDIT</button>
-                                </a>
+                                </RouterLink>
                                 <a href="">
                                     <button class="btn btn-sm btn-error">DELETE</button>
                                 </a>

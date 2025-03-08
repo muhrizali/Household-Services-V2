@@ -15,7 +15,7 @@ const timereq = ref(0);
 
 const message = ref("");
 
-function servieEditData() {
+function serviceEditData() {
     return {
         "id": serviceID,
         "name": name.value,
@@ -27,7 +27,7 @@ function servieEditData() {
 
 async function onEditClick() {
     try {
-        const response = await putAPI({ url: "/api/service", data: servieEditData() });
+        const response = await putAPI({ url: "/api/service", data: serviceEditData() });
         if (response.data.edited) {
             message.value = "Service Successfully Updated";
         } else {

@@ -20,6 +20,7 @@ import AdminProfessionalReject from '@/components/admin/AdminProfessionalReject.
 import AdminCustomerActivate from '@/components/admin/AdminCustomerActivate.vue';
 import AdminCustomerBlock from '@/components/admin/AdminCustomerBlock.vue';
 import AdminDashboardView from '@/views/AdminDashboardView.vue';
+import AdminRequestEdit from '@/components/admin/AdminRequestEdit.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -123,6 +124,11 @@ const router = createRouter({
               path: "request/details/:id",
               name: "admin_request_details",
               component: AdminRequestDetails
+            },
+            {
+              path: "request/edit/:id",
+              name: "admin_request_edit",
+              component: AdminRequestEdit
             },
           ]
         },

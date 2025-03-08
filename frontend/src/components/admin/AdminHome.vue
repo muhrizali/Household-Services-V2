@@ -1,16 +1,16 @@
 <script setup>
-import ServicesSection from './ServicesSection.vue';
-import ProfessionalSection from './ProfessionalSection.vue';
-import CustomerSection from './CustomerSection.vue';
-import ServiceRequestSection from './ServiceRequestSection.vue';
+import AdminServicesSection from './AdminServicesSection.vue';
+import AdminProfessionalSection from './AdminProfessionalSection.vue';
+import AdminCustomerSection from './AdminCustomerSection.vue';
+import AdminServiceRequestSection from './AdminServiceRequestSection.vue';
 </script>
 <template>
     <!-- SERVICES SECTION -->
-    <ServicesSection />
+    <AdminServicesSection />
     <!-- PROFESSIONALS SECTION -->
-    <ProfessionalSection />
+    <AdminProfessionalSection />
     <!-- CUSTOMERS SECTION -->
-    <CustomerSection />
+    <AdminCustomerSection />
     <!-- REQUESTS SECTION -->
-    <ServiceRequestSection />
+    <AdminServiceRequestSection />
 </template>
