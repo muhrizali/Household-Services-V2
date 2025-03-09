@@ -3,17 +3,24 @@ from flask import session
 from sqlalchemy import select, delete, update
 from sqlalchemy.sql import or_, and_
 from bcrypt import gensalt, hashpw, checkpw
+from datetime import datetime
 
 
 # AUTHENTICATION
 def login(user_obj):
     session["user"] = user_obj.email
-    return { "msg": "LOGGED IN", "user": user_obj.email, "role": user_obj.role }
+    if user_obj.role == "CUSTOMER":
+        return { "user": user_obj.email, "role": "CUSTOMER", "id": user_obj.get_customer().id }
+    elif user_obj.role == "PROFESSIONAL":
+        return { "user": user_obj.email, "role": "PROFESSIONAL", "id": user_obj.get_prof().id }
+    elif user_obj.role == "ADMIN":
+        return { "user": user_obj.email, "role": "ADMIN" }
 
 
-def logout(user_obj):
+
+def logout():
     session.pop("user", None)
-    return { "msg": "LOGGED OUT" }
+    return { "logged_out": True }
 
 
 def check_session():
@@ -156,6 +163,7 @@ def update_professional_status(ids, approval):
         prof.approval = approval
     db.session.commit()
 
+
 def update_customer_status(ids, status):
     customers = get_all_customers(ids=ids)
     for customer in customers:
@@ -198,6 +206,14 @@ def update_service_with_id(id, editdata):
     service.price = editdata.get("price")
     service.timereq = editdata.get("timereq")
     db.session.commit()
+
+def update_service_request_with_id(id, editdata):
+    service_request = get_request_with_id(id)
+    service_request.remarks = editdata.get("remarks")
+    completed = datetime.strptime(editdata.get("completed"), "%Y-%m-%d %H:%M:%S")
+    service_request.completed = completed
+    db.session.commit()
+
 
 def delete_with_id(model, pkid):
     sql = delete(model).where(model.id == pkid)

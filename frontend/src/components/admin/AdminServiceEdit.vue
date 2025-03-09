@@ -79,8 +79,7 @@ onMounted(async function () {
                                         <label for="name">NAME:</label>
                                     </td>
                                     <td>
-                                        <input id="name" type="text" class="input w-full input-bordered border-2"
-                                            v-model="name">
+                                        <input id="name" type="text" class="input w-full input-bordered border-2" v-model="name">
                                     </td>
                                 </tr>
                                 <tr>

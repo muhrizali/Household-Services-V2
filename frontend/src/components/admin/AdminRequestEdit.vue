@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
-import { getAPI, putAPI, getWithParamsAPI } from '@/httpreqs';
+import { getAPI, putAPI } from '@/httpreqs';
 const route = useRoute();
 const serviceRequestID = route.params.id;
 
@@ -15,17 +15,32 @@ const rating = ref(0);
 const stars = ref("");
 const remarks = ref("");
 const completed = ref("");
-const created = ref("");
 
+async function initialLoad() {
+    try {
+        const response = await getAPI({ url: "/api/request", params: { "id": serviceRequestID } });
+        if (response.data.found) {
+            serviceRequestFound.value = true;
+            serviceRequest.value = response.data.service_request;
+
+            status.value = serviceRequest.value.status;
+            rating.value = serviceRequest.value.rating;
+            stars.value = "⭐".repeat(rating.value);
+            remarks.value = serviceRequest.value.remarks;
+            completed.value = serviceRequest.value.completed;
+        } else {
+            serviceRequestFound.value = false;
+        }
+    } catch (error) {
+        message.value = "Something Went Wrong";
+    }
+}
 
 function serviceRequestEditData() {
     return {
         "id": serviceRequestID,
-        "status": status.value,
-        "rating": rating.value,
         "remarks": remarks.value,
         "completed": completed.value,
-        "created": created.value
     };
 }
 
@@ -45,26 +60,7 @@ async function onEditClick() {
     }, 2000);
 }
 
-onMounted(async function () {
-    try {
-        const response = await getAPI({ url: "/api/request", params: { "id": serviceRequestID } });
-        if (response.data.found) {
-            serviceRequest.value = response.data.service_request;
-            serviceRequestFound.value = true;
-
-            status.value = serviceRequest.value.status;
-            rating.value = serviceRequest.value.rating;
-            stars.value = "⭐".repeat(rating.value);
-            remarks.value = serviceRequest.value.remarks;
-            completed.value = serviceRequest.value.completed;
-            created.value = serviceRequest.value.created;
-        } else {
-            serviceRequestFound.value = false;
-        }
-    } catch (error) {
-        message.value = "Something Went Wrong";
-    }
-})
+onMounted(initialLoad);
 
 </script>
 <template>
@@ -74,7 +70,8 @@ onMounted(async function () {
                 <h2 class="card-title text-lg">EDIT SERVICE REQUEST</h2>
                 <!-- {{ serviceRequest }} -->
 
-                <div v-show="message" class="bg-warning font-semibold p-4 my-4 rounded-md border-2 border-warning-content/50">
+                <div v-show="message"
+                    class="bg-warning font-semibold p-4 my-4 rounded-md border-2 border-warning-content/50">
                     {{ message }}
                 </div>
 
@@ -111,8 +108,10 @@ onMounted(async function () {
                                         <label for="status">STATUS:</label>
                                     </td>
                                     <td>
-                                        <span v-if="status === 'REQUESTED'" class="badge badge-lg badge-error">REQUESTED</span>
-                                        <span v-else-if="status === 'ASSIGNED'" class="badge badge-lg badge-warning">ASSIGNED</span>
+                                        <span v-if="status === 'REQUESTED'"
+                                            class="badge badge-lg badge-error">REQUESTED</span>
+                                        <span v-else-if="status === 'ASSIGNED'"
+                                            class="badge badge-lg badge-warning">ASSIGNED</span>
                                         <span v-else class="badge badge-lg badge-success">CLOSED</span>
                                     </td>
                                 </tr>
@@ -130,8 +129,8 @@ onMounted(async function () {
                                     </td>
                                     <td>
                                         <textarea name="remarks" id="remarks"
-                                        class="textarea w-full textarea-bordered border-2"
-                                        rows="4" v-model="remarks"></textarea>
+                                            class="textarea w-full textarea-bordered border-2" rows="4"
+                                            v-model="remarks"></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -139,15 +138,8 @@ onMounted(async function () {
                                         <label for="completed">COMPLETED:</label>
                                     </td>
                                     <td>
-                                        <input type="text" id="completed" class="input w-full input-bordered border-2" v-model="completed">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label for="created">CREATED:</label>
-                                    </td>
-                                    <td>
-                                        <input type="text" id="created" class="input w-full input-bordered border-2" v-model="created">
+                                        <input type="text" id="completed" class="input w-full input-bordered border-2"
+                                            v-model="completed">
                                     </td>
                                 </tr>
                             </tbody>

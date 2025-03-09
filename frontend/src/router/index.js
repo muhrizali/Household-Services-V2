@@ -23,6 +23,7 @@ import AdminDashboardView from '@/views/AdminDashboardView.vue';
 import AdminRequestEdit from '@/components/admin/AdminRequestEdit.vue';
 import AdminRequestDelete from '@/components/admin/AdminRequestDelete.vue';
 import AdminSearch from '@/components/admin/AdminSearch.vue';
+import CustomerDashboardView from '@/views/CustomerDashboardView.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -61,7 +62,6 @@ const router = createRouter({
     },
     {
       path: "/user",
-      // component: DashboardView,
       children: [
         {
           path: "admin",
@@ -146,8 +146,14 @@ const router = createRouter({
         },
         {
           path: "customer",
-          name: "customer_home",
-          component: CustomerHome
+          component: CustomerDashboardView,
+          children: [
+            {
+              path: ":id",
+              name: "customer_home",
+              component: CustomerHome,
+            },
+          ]
         },
         {
           path: "professional",

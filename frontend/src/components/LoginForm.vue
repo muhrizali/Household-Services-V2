@@ -1,6 +1,6 @@
 <script setup>
 import { getAPI, postAPI } from '@/httpreqs';
-import { computed, ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -9,29 +9,51 @@ const route = useRoute();
 const email = ref("");
 const password = ref("");
 
-let message = ref("");
-let loginData = computed(() => {
-  return { "email": email.value, "password": password.value };
-})
+const messages = ref([]);
 
-// authentication
-// getAPI({ url: "/api/login" })
-//   .then((resp) => test.value = resp.data)
-//   .catch((err) => test.value = resp.data)
+function loginData() {
+  return { "email": email.value, "password": password.value };
+}
+
+function addMessage(msg) {
+  messages.value.push(msg);
+}
+
+function checkLoginForm() {
+
+  let validEmail = (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value));
+  let validPassword = (password.value.length > 0);
+
+  if (!validEmail) {
+    addMessage("EMAIL: Please enter valid email address");
+  }
+  if (!validPassword) {
+    addMessage("PASSWORD: Please enter valid password");
+  }
+
+  return validEmail && validPassword;
+}
 
 async function onLoginClick() {
   try {
-    const resp = await postAPI({ url: "/api/login", data: loginData.value })
-    if (resp.data.role === "CUSTOMER") {
-      router.push({ name: "customer_home" });
-    } else if (resp.data.role === "PROFESSIONAL") {
-      router.push({ name: "professional_home" });
-    } else if (resp.data.role === "ADMIN") {
-      router.push({ name: "admin_home" })
+    messages.value = [];
+    if (checkLoginForm()) {
+      const resp = await postAPI({ url: "/api/login", data: loginData() });
+      addMessage("Successfully logged in; Redirecting to dashboard");
+      setTimeout(() => {
+        if (resp.data.role === "CUSTOMER") {
+          router.push({ name: "customer_home", params: { id: resp.data.id } });
+        } else if (resp.data.role === "PROFESSIONAL") {
+          router.push({ name: "professional_home" });
+        } else if (resp.data.role === "ADMIN") {
+          router.push({ name: "admin_home" });
+        }
+      }, 2000);
+    } else {
+      addMessage("Could Not Log You In");
     }
-    message.value = "Logged In";
   } catch (error) {
-    message.value = "Error Logging In";
+    addMessage("Wrong Email or Password");
   }
 }
 
@@ -39,9 +61,14 @@ async function onLoginClick() {
 </script>
 <template>
   <div class="card card-bordered w-1/2">
-    <form @invalid="" class="card-body form-control">
+    <form class="card-body form-control">
 
       <h2 class="card-title text-2xl text-center">Login</h2>
+      <div v-if="messages.length" class="bg-warning font-semibold p-4 my-4 rounded-md border-2 border-warning-content/50">
+        <ul>
+          <li class="text-base-content" v-for="message in messages">{{ message }}</li>
+        </ul>
+      </div>
 
       <!-- Login Form -->
       <table class="table table-lg">
@@ -51,7 +78,8 @@ async function onLoginClick() {
               <label for="email">EMAIL</label>
             </td>
             <td>
-              <input v-model="email" id="email" placeholder="EMAIL@ORG.COM" type="email" class="input w-full input-bordered" />
+              <input v-model="email" id="email" placeholder="EMAIL@ORG.COM" type="email" required
+                class="input w-full input-bordered" />
             </td>
           </tr>
           <tr>
@@ -59,7 +87,8 @@ async function onLoginClick() {
               <label for="password">PASSWORD</label>
             </td>
             <td>
-              <input v-model="password" id="password" placeholder="YOUR-SECRET-PASSWORD" type="password" class="input w-full input-bordered" />
+              <input v-model="password" id="password" placeholder="YOUR-SECRET-PASSWORD" type="password"
+                required class="input w-full input-bordered" />
             </td>
           </tr>
         </tbody>
@@ -67,8 +96,8 @@ async function onLoginClick() {
 
       <button type="button" @click="onLoginClick" class="btn btn-block btn-lg btn-primary">LOGIN</button>
       <p class="text-center pt-2">
-        New member?
-        <RouterLink to="/register/customer" class="link link-primary">Create Account</RouterLink>
+        New member? <RouterLink :to="{ name: 'customer_register' }" class="link link-primary">Create Account
+        </RouterLink>
       </p>
     </form>
   </div>

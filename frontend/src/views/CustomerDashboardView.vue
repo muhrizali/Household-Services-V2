@@ -1,6 +1,16 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
+import { getAPI } from '@/httpreqs';
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 
+const router = useRouter();
+const route = useRoute();
+
+async function onLogoutClick() {
+  const response = await getAPI({ url: "/api/login", params: { "logout": true } });
+  if (response.data.logged_out) {
+    router.push({ name: 'login' });
+  }
+}
 </script>
 <template>
     <div class="font-fira">
@@ -16,13 +26,13 @@ import { RouterLink, RouterView } from 'vue-router';
         <div class="navbar-center">
           <ul class="menu menu-lg menu-horizontal">
 
-            <li><RouterLink :to="{ name: 'admin_home' }" class="btn btn-ghost">Home</RouterLink></li>
+            <li><RouterLink to="" class="btn btn-ghost">Home</RouterLink></li>
             <li><RouterLink to="" class="btn btn-ghost">Search</RouterLink></li>
           </ul>
         </div>
         <div class="navbar-end">
-          <!-- <RouterLink class="btn btn-ghost text-lg"> Profile </RouterLink> -->
-          <RouterLink :to="{ name: 'login' }" class="btn btn-ghost text-lg"> Logout </RouterLink>
+          <RouterLink class="btn btn-ghost text-lg"> Profile </RouterLink>
+          <button @click.prevent="onLogoutClick" class="btn btn-ghost text-lg"> Logout </button>
         </div>
       </nav>
 
