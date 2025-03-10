@@ -10,8 +10,9 @@ async function getAPI({ url, params }) {
     if (params) {
         return await axios.get(url, { ...baseConfig, params });
     }
-    return await axios.get(url, baseConfig);
+    return await axios.get(url, { ...baseConfig });
 }
+
 
 async function getWithParamsAPI({ url, params }) {
     return await axios.get(url, { ...baseConfig, params });

@@ -1,42 +1,86 @@
-from apps import api
+from apps import api, app
 from flask import request, jsonify
 from flask_restful import Resource
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from fns import *
 from time import sleep
+
+# core views
+@app.route("/core/test", methods=["GET", "POST"])
+def test():
+    return { "message": "Hello Mom, This is flask core" }
+
+@app.route("/core/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+    try:
+        if email and password:
+            user = get_user_with_creds(email, password)        
+        if user:
+            return login_user(user)
+        else:
+            return { "logged_in": False, "message": "Wrong Email/Password" }, 401
+    except Exception as e:
+        return { "logged_in": False, "message": f"Error: {str(e)}" }, 401
+
+
+@app.route("/core/protected", methods=["GET"])
+@jwt_required()
+def protected():
+    current_user_username = get_jwt_identity()
+    user = get_user_with_username(current_user_username)
+    if user.role == "CUSTOMER":
+        return {
+            "logged_in": True,
+            "id": user.get_customer().id,
+            "user": user.email, 
+            "role": "CUSTOMER", 
+        }
+    elif user.role == "PROFESSIONAL":
+        return {
+            "logged_in": True,
+            "id": user.get_prof().id,
+            "user": user.email, 
+            "role": "PROFESSIONAL", 
+        }
+    elif user.role == "ADMIN":
+        return {
+            "logged_in": True,
+            "user": user.email, 
+            "role": "ADMIN",
+        }
+
 
 
 # API resources
 
 # for logins
 class LoginAPI(Resource):
+    
     def get(self):
-        req = request.args
-        if req.get("check_login"):
-            return jsonify(check_session())
-        if req.get("logout"):
-            return jsonify(logout())
+        # req = request.args
+        # if req.get("check_protect"):
+        #     current_user = get_jwt_identity()
+        #     return { "logged_in": True, "user_id": current_user }
+        pass
     
     def post(self):
-        data = request.json
-        email = data.get("email")
-        password = data.get("password")
-        try:
-            if email and password:
-                user = get_user_with_creds(email, password)        
-            if user:
-                # return user.to_dict()
-                return login(user)
-            else:
-                return { "message": "Wrong Email or Password" }, 401
-        except:
-            return { "message": "Something Went Wrong" }, 401
+        # data = request.json
+        # email = data.get("email")
+        # password = data.get("password")
+        # try:
+        #     if email and password:
+        #         user = get_user_with_creds(email, password)        
+        #     if user:
+        #         return login(user)
+        #     else:
+        #         return { "logged_in": False, "message": "Wrong Email/Password" }, 401
+        # except:
+        #     return { "logged_in": True, "message": "Something Went Wrong" }, 401
+        pass
 
-# for cookies sessions
-class SessionAPI(Resource):
-    def get(self):
-        data = request.json
-        return check_session()
-        # user = get_user_with_id(data.get('id'))
 
 
 # professionals
@@ -240,8 +284,7 @@ class TestAPI(Resource):
         return jsonify(test_dict)
 
 # API routes
-api.add_resource(LoginAPI, "/api/login")
-api.add_resource(SessionAPI, "/api/check_session")
+# api.add_resource(LoginAPI, "/api/login")
 
 api.add_resource(ProfessionalAPI, "/api/professional")
 api.add_resource(CustomerAPI, "/api/customer")

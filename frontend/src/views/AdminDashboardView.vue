@@ -1,5 +1,13 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router';
+import { logoutUser } from '@/fns';
+import { RouterLink, RouterView, useRouter } from 'vue-router';
+
+const router = useRouter();
+
+function onLogoutClick() {
+  logoutUser();
+  router.push({ name: 'login' });
+}
 
 </script>
 <template>
@@ -22,7 +30,7 @@ import { RouterLink, RouterView } from 'vue-router';
         </div>
         <div class="navbar-end">
           <!-- <RouterLink class="btn btn-ghost text-lg"> Profile </RouterLink> -->
-          <RouterLink :to="{ name: 'login' }" class="btn btn-ghost text-lg"> Logout </RouterLink>
+          <button @click.prevent="onLogoutClick" class="btn btn-ghost text-lg"> Logout </button>
         </div>
       </nav>
 

@@ -1,4 +1,5 @@
 <script setup>
+import { logoutUser } from '@/fns';
 import { getAPI } from '@/httpreqs';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 
@@ -6,10 +7,8 @@ const router = useRouter();
 const route = useRoute();
 
 async function onLogoutClick() {
-  const response = await getAPI({ url: "/api/login", params: { "logout": true } });
-  if (response.data.logged_out) {
-    router.push({ name: 'login' });
-  }
+  logoutUser();
+  router.push({ name: 'login' });
 }
 </script>
 <template>

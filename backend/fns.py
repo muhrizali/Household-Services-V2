@@ -4,30 +4,42 @@ from sqlalchemy import select, delete, update
 from sqlalchemy.sql import or_, and_
 from bcrypt import gensalt, hashpw, checkpw
 from datetime import datetime
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 
 # AUTHENTICATION
-def login(user_obj):
-    session["user"] = user_obj.email
+def login_user(user_obj):
+    access_token = create_access_token(identity = user_obj.username)
+
     if user_obj.role == "CUSTOMER":
-        return { "user": user_obj.email, "role": "CUSTOMER", "id": user_obj.get_customer().id }
+        return {
+            "access_token": access_token,
+            "logged_in": True,
+            "id": user_obj.get_customer().id,
+            "user": user_obj.email, 
+            "role": "CUSTOMER", 
+        }
     elif user_obj.role == "PROFESSIONAL":
-        return { "user": user_obj.email, "role": "PROFESSIONAL", "id": user_obj.get_prof().id }
+        return {
+            "access_token": access_token,
+            "logged_in": True,
+            "id": user_obj.get_prof().id,
+            "user": user_obj.email, 
+            "role": "PROFESSIONAL", 
+        }
     elif user_obj.role == "ADMIN":
-        return { "user": user_obj.email, "role": "ADMIN" }
+        return {
+            "access_token": access_token,
+            "logged_in": True,
+            "user": user_obj.email, 
+            "role": "ADMIN",
+        }
 
 
 
 def logout():
-    session.pop("user", None)
+    # session.pop("user", None)
     return { "logged_out": True }
-
-
-def check_session():
-    if "user" in session:
-        return { "logged_in": True, "user": session["user"] }
-    else:
-        return { "logged_in": False }
 
 
 # PASSWORDS
@@ -191,6 +203,10 @@ def get_request_with_id(id):
 
 def get_user_with_id(id):
     return get_with_id(User, id)
+
+def get_user_with_username(username):
+    sql = select(User).filter(User.username == username)
+    return db.session.scalars(sql).first()
 
 def get_user_with_creds(email, passwd):
     sql = select(User).filter(User.email == email)
