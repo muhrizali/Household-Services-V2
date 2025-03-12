@@ -75,6 +75,7 @@ watch(selectAll, async (newVal, oldVal) => {
     }
 });
 
+
 onMounted(async function () {
     if (props.items.length) {
         customers.value = props.items;

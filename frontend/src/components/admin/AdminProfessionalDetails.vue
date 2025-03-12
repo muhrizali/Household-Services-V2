@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
-import { getWithParamsAPI } from '@/httpreqs';
+import { getWithParamsAPI, getAPI } from '@/httpreqs';
 const route = useRoute();
 const professionalID = route.params.id;
 
@@ -11,7 +11,7 @@ const message = ref("");
 
 onMounted(async function () {
     try {
-        const response = await getWithParamsAPI({ url: "/api/professional", params: { "id": professionalID } });
+        const response = await getAPI({ url: "/api/professional", params: { "id": parseInt(professionalID) } });
         if (response.data.found) {
             professionalFound.value = true;
             professional.value = response.data.professional;
@@ -19,7 +19,7 @@ onMounted(async function () {
             professionalFound.value = false;
         }
     } catch (error) {
-        message.value = "Something Went Wrong";
+        message.value = `Something Went Wrong; ${error}`;
     }
 })
 
@@ -102,6 +102,8 @@ onMounted(async function () {
                 <p class="text-center text-lg font-bold">Requested Professional Not Found</p>
             </div>
             <p class="text-center text-lg font-bold">{{ message }}</p>
+            <!-- {{ professional }} -->
+
 
             <p class="text-center pt-2">
                 Go back to <RouterLink :to="{ name: 'admin_home' }" class="link link-primary">Home</RouterLink>

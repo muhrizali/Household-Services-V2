@@ -3,7 +3,10 @@ from flask import request, jsonify
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from fns import *
-from time import sleep
+# from time import sleep
+
+# Caching Database before anything
+cache_db()
 
 # core views
 @app.route("/core/test", methods=["GET", "POST"])
@@ -53,7 +56,6 @@ def protected():
         }
 
 
-
 # API resources
 
 # for logins
@@ -88,14 +90,19 @@ class ProfessionalAPI(Resource):
     def get(self):
         req = request.args
         if req.get("id"):
-            professional = get_professional_with_id(id = req.get("id"))
+            professional = get_professional_with_id(id = int(req.get("id")))
             if professional:
-                return jsonify({ "professional": professional.to_dict(), "found": True })
+                return jsonify({ "professional": professional, "found": True })
+            else:
+                return jsonify({ "found": False })
+        if req.get("ids"):
+            professionals = get_all_professionals(ids = req.getlist("ids"))
+            if professionals:
+                return jsonify({ "professionals": professionals, "found": True })
             else:
                 return jsonify({ "found": False })
         professionals = get_all_professionals()
-        data = [professional.to_dict() for professional in professionals]
-        return jsonify({ "professionals": data })
+        return jsonify({ "professionals": professionals })
     
     def post(self):
         new_user = request.get_json()
@@ -125,14 +132,13 @@ class CustomerAPI(Resource):
     def get(self):
         req = request.args
         if req.get("id"):
-            customer = get_customer_with_id(id = req["id"])
+            customer = get_customer_with_id(id = int(req.get("id")))
             if customer:
-                return jsonify({ "customer": customer.to_dict(), "found": True })
+                return jsonify({ "customer": customer, "found": True })
             else:
                 return jsonify({ "found": False })
         customers = get_all_customers()
-        data = [customer.to_dict() for customer in customers]
-        return jsonify({ "customers": data })
+        return jsonify({ "customers": customers })
 
     # adding new customer
     def post(self):
@@ -160,20 +166,16 @@ class ServiceAPI(Resource):
     def get(self):
         req = request.args
         if req.get("id"):
-            service = get_service_with_id(id = req.get("id"))
+            service = get_service_with_id(id = int(req.get("id")))
             if service:
-                return jsonify({ "service": service.to_dict(), "found": True })
+                return jsonify({ "service": service, "found": True })
             else:
                 return jsonify({ "found": False })
         if req.get("ids"):
             services = get_all_services(ids = req.get("ids"))
-            if services:
-                data = [service.to_dict() for service in services]
-                return jsonify({ "services": data })
+            return jsonify({ "services": services })
         services = get_all_services()
-        if services:
-            data = [service.to_dict() for service in services]
-            return jsonify({ "services": data })
+        return jsonify({ "services": services })
     
     def post(self):
         new_service_data = request.json
@@ -207,14 +209,13 @@ class ServiceRequestAPI(Resource):
     def get(self):
         req = request.args
         if req.get("id"):
-            service_request = get_request_with_id(id=req.get("id"))
+            service_request = get_request_with_id(id = int(req.get("id")))
             if service_request:
-                return jsonify({ "service_request": service_request.to_dict(), "found": True })
+                return jsonify({ "service_request": service_request, "found": True })
             else:
                 return jsonify({ "found": False })
         service_requests = get_all_requests()
-        data = [service_request.to_dict() for service_request in service_requests]
-        return jsonify({ "found": True, "requests": data })
+        return jsonify({ "found": True, "requests": service_requests })
     
     def put(self):
         req = request.get_json()
