@@ -95,6 +95,14 @@ class ProfessionalAPI(Resource):
                 return jsonify({ "professional": professional, "found": True })
             else:
                 return jsonify({ "found": False })
+
+        if req.get('sid'):
+            professionals = get_all_professionals_with_sid(sid = int(req.get('sid')))
+            if professionals:
+                return jsonify({ 'professionals': professionals, 'found': True })
+            else:
+                return jsonify({ "found": False })
+
         if req.get("ids"):
             professionals = get_all_professionals(ids = req.getlist("ids"))
             if professionals:
@@ -173,9 +181,9 @@ class ServiceAPI(Resource):
                 return jsonify({ "found": False })
         if req.get("ids"):
             services = get_all_services(ids = req.get("ids"))
-            return jsonify({ "services": services })
+            return jsonify({ "services": services, 'found': True })
         services = get_all_services()
-        return jsonify({ "services": services })
+        return jsonify({ "services": services, 'found': True })
     
     def post(self):
         new_service_data = request.json
@@ -214,24 +222,38 @@ class ServiceRequestAPI(Resource):
                 return jsonify({ "service_request": service_request, "found": True })
             else:
                 return jsonify({ "found": False })
+        if req.get("cid"):
+            service_requests = get_all_requests_with_cid(cid = int(req.get('cid')))
+            if service_requests:
+                return jsonify({ "found": True, "requests": service_requests })
+            else:
+                return jsonify({ 'found': False })
+        
         service_requests = get_all_requests()
-        return jsonify({ "found": True, "requests": service_requests })
-    
+        if service_requests:
+            return jsonify({ "found": True, "requests": service_requests })
+        else:
+            return jsonify({ 'found': False })
+
+
     def put(self):
         req = request.get_json()
-        try:
+
+        if req:
             update_service_request_with_id(req.get("id"), req)
             return jsonify({ "edited": True })
-        except:
+        else:
             return jsonify({ "edited": False })
 
 
     def delete(self):
         req = request.args
+        
         if req.get("id"):
             delete_requests_with_ids([req.get("id")])
             return jsonify({ "deleted": True })
-        elif req.get("ids"):
+        
+        if req.get("ids"):
             delete_requests_with_ids(req.getlist("ids"))
             return jsonify({ "deleted": True })
 

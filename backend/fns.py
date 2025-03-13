@@ -122,6 +122,13 @@ def get_all_professionals(ids=None):
     # redis_client.setex("PROFESSIONAL_ALL", 60, json.dumps(professional_all_dict_list))
     return professional_all_dict_list
 
+def get_all_professionals_with_sid(sid):
+    professionals = get_all_professionals()
+    def extract_professionals(professional):
+        return professional['service']['id'] == sid
+    filtered = list(filter(extract_professionals, professionals))
+    return filtered
+
 
 def get_all_services(ids=None):
     if redis_client.exists("SERVICE_ALL"):
@@ -143,6 +150,13 @@ def get_all_requests(ids=None):
     service_request_all_dict_list = [service_request.to_dict() for service_request in service_request_all]
     redis_client.setex("SERVICE_REQUEST_ALL", 60, json.dumps(service_request_all_dict_list))
     return service_request_all_dict_list
+
+def get_all_requests_with_cid(cid):
+    service_requests = get_all_requests()
+    def extract_service_requests(service_request):
+        return service_request['customer']['id'] == cid
+    filtered = list(filter(extract_service_requests, service_requests))
+    return filtered
 
 
 

@@ -24,6 +24,10 @@ import AdminRequestEdit from '@/components/admin/AdminRequestEdit.vue';
 import AdminRequestDelete from '@/components/admin/AdminRequestDelete.vue';
 import AdminSearch from '@/components/admin/AdminSearch.vue';
 import CustomerDashboardView from '@/views/CustomerDashboardView.vue';
+import CustomerProfileDetails from '@/components/customer/CustomerProfileDetails.vue';
+import CustomerRequestDetails from '@/components/customer/CustomerRequestDetails.vue';
+import CustomerRequestCancel from '@/components/customer/CustomerRequestCancel.vue';
+import CustomerServiceDetails from '@/components/customer/CustomerServiceDetails.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -145,13 +149,33 @@ const router = createRouter({
           ]
         },
         {
-          path: "customer",
+          path: "customer/:id",
           component: CustomerDashboardView,
           children: [
             {
-              path: ":id",
+              path: "",
               name: "customer_home",
               component: CustomerHome,
+            },
+            {
+              path: "profile",
+              name: "customer_profile_details",
+              component: CustomerProfileDetails,
+            },
+            {
+              path: "service/:sid",
+              name: "customer_service_details",
+              component: CustomerServiceDetails,
+            },
+            {
+              path: "request/:rid",
+              name: "customer_request_details",
+              component: CustomerRequestDetails,
+            },
+            {
+              path: "request/cancel/:rid",
+              name: "customer_request_cancel",
+              component: CustomerRequestCancel,
             },
           ]
         },
