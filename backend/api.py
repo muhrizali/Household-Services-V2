@@ -162,12 +162,15 @@ class CustomerAPI(Resource):
     def put(self):
         req = request.get_json()
         if req.get("activate_selected"):
-            update_customer_status(ids=req.get("ids"), status="ACTIVE")
+            update_customer_status(ids=req.get('ids'), status="ACTIVE")
             return jsonify({ "edited": True })
         
         if req.get("block_selected"):
             update_customer_status(ids=req.get("ids"), status="BLOCKED")
             return jsonify({ "edited": True })
+        
+        if req.get("edit_profile"):
+            pass
 
 # services
 class ServiceAPI(Resource):
@@ -186,7 +189,7 @@ class ServiceAPI(Resource):
         return jsonify({ "services": services, 'found': True })
     
     def post(self):
-        new_service_data = request.json
+        new_service_data = request.get_json()
         try:
             return jsonify(add_service(new_service_data))
         except:
@@ -234,13 +237,29 @@ class ServiceRequestAPI(Resource):
             return jsonify({ "found": True, "requests": service_requests })
         else:
             return jsonify({ 'found': False })
+        
+    def post(self):
+        new_service_request_data = request.get_json()
+        if new_service_request_data:
+            add_service_request(
+                new_service_request_data.get('cid'), 
+                new_service_request_data.get('sid'), 
+                new_service_request_data.get('pid')
+            )
+            return jsonify({ 'added': True })
+        else:
+            return jsonify({ 'added': False }), 401
+
 
 
     def put(self):
         req = request.get_json()
 
-        if req:
-            update_service_request_with_id(req.get("id"), req)
+        if req.get('edit_request'):
+            update_service_request_with_id(int(req.get("id")), req)
+            return jsonify({ "edited": True })
+        if req.get('close_request'):
+            close_service_request_with_id(int(req.get('id')), req)
             return jsonify({ "edited": True })
         else:
             return jsonify({ "edited": False })

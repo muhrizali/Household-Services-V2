@@ -41,6 +41,7 @@ function serviceRequestEditData() {
         "id": serviceRequestID,
         "remarks": remarks.value,
         "completed": completed.value,
+        "edit_request": true
     };
 }
 

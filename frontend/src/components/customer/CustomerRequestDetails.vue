@@ -86,7 +86,7 @@ onMounted(async function () {
                         <button class="btn btn-sm btn-error">❌ CANCEL</button>
                     </RouterLink>
                     <RouterLink v-if="serviceRequest.status === 'ASSIGNED'" :to="{}">
-                        <button class="btn btn-sm btn-error">🗑️ CLOSE?</button>
+                        <button class="btn btn-sm btn-primary">🗑️ CLOSE?</button>
                     </RouterLink>
                 </div>
             </div>

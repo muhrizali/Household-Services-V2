@@ -71,11 +71,11 @@ onMounted(initialLoad);
                                     :to="{ name: 'customer_request_cancel', params: { rid: serviceRequest.id } }">
                                     <span class="btn btn-sm btn-error">CANCEL</span>
                                 </RouterLink>
-                                <a  
+                                <RouterLink  
                                     v-if="serviceRequest.status === 'ASSIGNED'"
-                                    href="{ url_for('customer_request_close', cust_id=customer.id, req_id=service_request.id) }">
+                                    :to="{ name: 'customer_request_close', params: { rid: serviceRequest.id } }">
                                     <span class="btn btn-sm btn-primary">CLOSE?</span>
-                                </a>
+                                </RouterLink>
                             </td>
                         </tr>
                     </tbody>

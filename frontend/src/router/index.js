@@ -28,6 +28,9 @@ import CustomerProfileDetails from '@/components/customer/CustomerProfileDetails
 import CustomerRequestDetails from '@/components/customer/CustomerRequestDetails.vue';
 import CustomerRequestCancel from '@/components/customer/CustomerRequestCancel.vue';
 import CustomerServiceDetails from '@/components/customer/CustomerServiceDetails.vue';
+import CustomerProfessionalDetails from '@/components/customer/CustomerProfessionalDetails.vue';
+import CustomerRequestBook from '@/components/customer/CustomerRequestBook.vue';
+import CustomerRequestClose from '@/components/customer/CustomerRequestClose.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -168,6 +171,16 @@ const router = createRouter({
               component: CustomerServiceDetails,
             },
             {
+              path: "service/:sid/professional/:pid",
+              name: "customer_professional_details",
+              component: CustomerProfessionalDetails,
+            },
+            {
+              path: "service/:sid/professional/:pid/book",
+              name: "customer_request_book",
+              component: CustomerRequestBook,
+            },
+            {
               path: "request/:rid",
               name: "customer_request_details",
               component: CustomerRequestDetails,
@@ -176,6 +189,11 @@ const router = createRouter({
               path: "request/cancel/:rid",
               name: "customer_request_cancel",
               component: CustomerRequestCancel,
+            },
+            {
+              path: "request/close/:rid",
+              name: "customer_request_close",
+              component: CustomerRequestClose,
             },
           ]
         },

@@ -305,18 +305,23 @@ def delete_requests_with_ids(ids):
 
 
 def update_professional_status(ids, approval):
-    profs = get_all_professionals(ids=ids)
+    profs = get_all(Professional, ids=ids)
     for prof in profs:
         prof.approval = approval
     db.session.commit()
+    cache_professionals()
 
 
 def update_customer_status(ids, status):
-    customers = get_all_customers(ids=ids)
+    customers = get_all(Customer, ids=ids)
     for customer in customers:
         customer.status = status
     db.session.commit()
+    cache_customers()
 
+def update_customer_profile(id, editdata):
+    customer = get_with_id(Customer, id)
+    pass
 
 def update_service_with_id(id, editdata):
     service = get_service_with_id(id)
@@ -325,14 +330,28 @@ def update_service_with_id(id, editdata):
     service.price = editdata.get("price")
     service.timereq = editdata.get("timereq")
     db.session.commit()
+    cache_services()
 
 
 def update_service_request_with_id(id, editdata):
-    service_request = get_request_with_id(id)
+    service_request = get_with_id(ServiceRequest, id)
     service_request.remarks = editdata.get("remarks")
-    completed = datetime.strptime(editdata.get("completed"), "%Y-%m-%d %H:%M:%S")
-    service_request.completed = completed
+    if not (editdata.get('completed') == 'In-Progess'):
+        completed = datetime.strptime(editdata.get("completed"), "%Y-%m-%d %H:%M:%S")
+        service_request.completed = completed
     db.session.commit()
+    cache_service_requests()
+
+
+def close_service_request_with_id(id, editdata):
+    service_request = get_with_id(ServiceRequest, id)
+    service_request.rating = editdata.get('rating')
+    service_request.remarks = editdata.get('remarks')
+    service_request.status = "CLOSED"
+    service_request.completed = datetime.now()
+    db.session.commit()
+    cache_service_requests()
+
 
 
 def delete_with_id(model, pkid):
@@ -342,6 +361,7 @@ def delete_with_id(model, pkid):
 
 def delete_service_with_id(id):
     delete_with_id(Service, id)
+
 
 
 def add_customer_user(user_data, cust_data):
@@ -363,6 +383,16 @@ def add_service(service_data):
     cache_services()
     return { "added": True, "message": "Service Added Successfully" }
 
+
+def add_service_request(cid, sid, pid):
+    service_request = ServiceRequest(
+        customer_id = cid,
+        service_id = sid,
+        professional_id = pid
+    )
+    db.session.add(service_request)
+    db.session.commit()
+    cache_service_requests()
 
 def add_professional_user(user_data, prof_data):
     user = User(**user_data)

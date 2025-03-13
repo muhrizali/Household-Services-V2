@@ -72,8 +72,8 @@ onMounted(initialLoad)
             </div>
             <div v-else>
                 <p class="text-center text-lg font-bold">Requested Service Not Found</p>
+                <p class="text-center text-lg font-bold">{{ message }}</p>
             </div>
-            <p class="text-center text-lg font-bold">{{ message }}</p>
 
             <p class="text-center pt-2">
                 Go back to <RouterLink :to="{ name: 'customer_home' }" class="link link-primary">Home</RouterLink>
@@ -99,9 +99,9 @@ onMounted(initialLoad)
                     <tbody>
                         <tr v-for="prof in professionals">
                             <td>
-                                <a href="{ url_for('customer_prof_details', cust_id=customer.id, prof_id=prof.id) }">
+                                <RouterLink :to="{ name: 'customer_professional_details', params: { sid: service.id, pid: prof.id } }">
                                     <button class="btn btn-sm">{{ prof.id }}</button>
-                                </a>
+                                </RouterLink>
                             </td>
                             <td>{{ prof.user.fullname }}</td>
                             <td>{{ prof.service.name }}</td>
@@ -113,10 +113,10 @@ onMounted(initialLoad)
                             </td>
                             <td>
                                 <span>
-                                    <a
-                                        href="{ url_for('customer_service_book', cust_id=customer.id, service_id=service.id, prof_id=prof.id) }">
+                                    <RouterLink
+                                        :to="{ name: 'customer_request_book', params: { sid: service.id, pid: prof.id } }">
                                         <button class="btn btn-sm btn-success">Book</button>
-                                    </a>
+                                    </RouterLink>
                                 </span>
                             </td>
                         </tr>

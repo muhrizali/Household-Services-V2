@@ -2,8 +2,10 @@
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { getAPI } from '@/httpreqs';
+
 const route = useRoute();
-const professionalID = route.params.id;
+const serviceID = route.params.sid;
+const professionalID = route.params.pid;
 
 const professional = ref({});
 const professionalFound = ref(false);
@@ -47,12 +49,6 @@ onMounted(async function () {
                             <td class="text-lg font-bold underline">SERVICE:</td>
                             <td>{{ professional.service.name }}</td>
                         </tr>
-                        <!-- <tr>
-                            <td class="text-lg font-bold underline">DOCUMENTS:</td>
-                            <td>
-                                <a href="{{ prof.get_docs_file() }}" class="link" download>Verification Documents</a>
-                            </td>
-                        </tr> -->
                         <tr>
                             <td class="text-lg font-bold underline">AVERAGE RATING:</td>
                             <td>{{ professional.avg_rating }}</td>
@@ -90,11 +86,8 @@ onMounted(async function () {
 
                 <!-- Professional Actions -->
                 <span class="flex justify-end gap-2">
-                    <RouterLink :to="{ name: 'admin_professional_approve', params: { id: professional.id } }">
-                        <button class="btn btn-sm btn-success">👍 APPROVE</button>
-                    </RouterLink>
-                    <RouterLink :to="{ name: 'admin_professional_reject', params: { id: professional.id } }">
-                        <button class="btn btn-sm btn-error">👎 REJECT</button>
+                    <RouterLink :to="{ name: 'customer_request_book', params: { sid: serviceID, pid: professionalID } }">
+                        <button class="btn btn-sm btn-success">BOOK</button>
                     </RouterLink>
                 </span>
             </div>
@@ -102,11 +95,9 @@ onMounted(async function () {
                 <p class="text-center text-lg font-bold">Requested Professional Not Found</p>
             </div>
             <p class="text-center text-lg font-bold">{{ message }}</p>
-            <!-- {{ professional }} -->
-
 
             <p class="text-center pt-2">
-                Go back to <RouterLink :to="{ name: 'admin_home' }" class="link link-primary">Home</RouterLink>
+                Go back to <RouterLink :to="{ name: 'customer_home' }" class="link link-primary">Home</RouterLink>
             </p>
         </div>
     </section>
