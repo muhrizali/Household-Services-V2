@@ -56,7 +56,7 @@ watch(selectAll, async (newVal, oldVal) => {
 });
 
 onMounted(async function () {
-    if (props.items.length) {
+    if (props.items?.length) {
         requests.value = props.items;
     } else {
         initialLoad();

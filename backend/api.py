@@ -169,8 +169,9 @@ class CustomerAPI(Resource):
             update_customer_status(ids=req.get("ids"), status="BLOCKED")
             return jsonify({ "edited": True })
         
-        if req.get("edit_profile"):
-            pass
+        if req.get('edit_profile'):
+            update_customer_profile(id=int(req.get('id')), editdata=req)
+            return jsonify({ 'edited': True })
 
 # services
 class ServiceAPI(Resource):

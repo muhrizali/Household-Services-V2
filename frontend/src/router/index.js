@@ -31,6 +31,8 @@ import CustomerServiceDetails from '@/components/customer/CustomerServiceDetails
 import CustomerProfessionalDetails from '@/components/customer/CustomerProfessionalDetails.vue';
 import CustomerRequestBook from '@/components/customer/CustomerRequestBook.vue';
 import CustomerRequestClose from '@/components/customer/CustomerRequestClose.vue';
+import CustomerProfileEdit from '@/components/customer/CustomerProfileEdit.vue';
+import CustomerSearch from '@/components/customer/CustomerSearch.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -161,9 +163,19 @@ const router = createRouter({
               component: CustomerHome,
             },
             {
+              path: "search",
+              name: "customer_search",
+              component: CustomerSearch,
+            },
+            {
               path: "profile",
               name: "customer_profile_details",
               component: CustomerProfileDetails,
+            },
+            {
+              path: "edit",
+              name: "customer_profile_edit",
+              component: CustomerProfileEdit,
             },
             {
               path: "service/:sid",

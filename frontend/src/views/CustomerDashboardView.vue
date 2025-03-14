@@ -48,7 +48,7 @@ onMounted(initialLoad);
           <ul class="menu menu-lg menu-horizontal">
 
             <li><RouterLink :to="{ name: 'customer_home', params: { id: customerID } }" class="btn btn-ghost">Home</RouterLink></li>
-            <li><RouterLink to="" class="btn btn-ghost">Search</RouterLink></li>
+            <li><RouterLink :to="{ name: 'customer_search' }" class="btn btn-ghost">Search</RouterLink></li>
           </ul>
         </div>
         <div class="navbar-end">

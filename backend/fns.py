@@ -213,7 +213,7 @@ def get_user_with_creds(email, passwd):
 # SEARCHING FUNCTIONS
 def search_professional_objects(parameter, query):
     if (query == ""):
-        return get_all_professionals()
+        return get_all(Professional)
     
     query = '%' + query + '%'
     if parameter == "professional_name":
@@ -231,7 +231,7 @@ def search_professional_objects(parameter, query):
 
 def search_customer_objects(parameter, query):
     if (query == ""):
-        return get_all_customers()
+        return get_all(Customer)
 
     query = '%' + query + '%'
     if parameter == "customer_name":
@@ -249,7 +249,7 @@ def search_customer_objects(parameter, query):
 
 def search_service_objects(parameter, query):
     if (query == ""):
-        return get_all_services()
+        return get_all(Service)
 
     if parameter == "service_name":
         query = '%' + query + '%'
@@ -264,7 +264,7 @@ def search_service_objects(parameter, query):
 
 def search_request_objects(parameter, query):
     if (query == ""):
-        return get_all_requests()
+        return get_all(ServiceRequest)
 
     query = '%' + query + '%'
     if parameter == "request_service_name":
@@ -319,12 +319,30 @@ def update_customer_status(ids, status):
     db.session.commit()
     cache_customers()
 
+
 def update_customer_profile(id, editdata):
     customer = get_with_id(Customer, id)
-    pass
+
+    if customer.user.fullname != editdata.get('fullname'):
+        customer.user.fullname = editdata.get('fullname')
+    
+    if customer.user.username != editdata.get('username'):
+        customer.user.username = editdata.get('username')
+    
+    if customer.user.email != editdata.get('email'):
+        customer.user.email = editdata.get('email')
+    
+    if customer.contact != editdata.get('contact'):
+        customer.contact = editdata.get('contact')
+    
+    if customer.address != editdata.get('address'):
+        customer.address = editdata.get('address')
+    
+    db.session.commit()
+    cache_customers()
 
 def update_service_with_id(id, editdata):
-    service = get_service_with_id(id)
+    service = get_with_id(Service, id)
     service.name = editdata.get("name")
     service.description = editdata.get("description")
     service.price = editdata.get("price")
@@ -368,6 +386,7 @@ def add_customer_user(user_data, cust_data):
     user = User(**user_data)
     customer = Customer(**cust_data)
     customer.user = user
+    customer.user.password = gen_hash(user_data.get('password'))
     db.session.add(customer)
     db.session.commit()
     cache_users()
@@ -398,8 +417,10 @@ def add_professional_user(user_data, prof_data):
     user = User(**user_data)
     professional = Professional(**prof_data)
     professional.user = user
+    professional.user.password = gen_hash(user_data.get('password'))
     db.session.add(professional)
     db.session.commit()
+    cache_users()
     cache_professionals()
 
 

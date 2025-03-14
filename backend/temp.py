@@ -1,5 +1,5 @@
 from models import Service, db, Professional, Customer, User, ServiceRequest
-# from models import get_all, get_with_id, delete_with_id
+from models import get_all, get_with_id, delete_with_id
 from sqlalchemy import insert, select, delete
 from fns import gen_hash
 from datetime import datetime
@@ -358,7 +358,7 @@ def get_all_profs():
     print()
     print("Getting All Professionals:")
     for prof in profs:
-        print(f"{prof.id}, {prof.service.name}, {prof.user.fullname}, {prof.approval}, {prof.user.role}, {prof.created}")
+        print(f"{prof.id}, {prof.service.name}, {prof.user.fullname}, {prof.user.password}, {prof.approval}, {prof.user.role}, {prof.created}")
 
 def get_all_custs():
     custs = get_all(Customer)
@@ -461,40 +461,4 @@ def rm_data():
 
 # create_dummy_data()
 # rm_data()
-# get_data()
-
-##############################################################################3
-# cache_db()
-from redis import Redis
-import json
-
-redis_client = Redis(decode_responses=True)
-
-def get_all(model, ids=None):
-    if ids:
-        sql = select(model).where(model.id.in_(ids)).order_by(model.id)
-    else:
-        sql = select(model).order_by(model.id)
-    results = db.session.scalars(sql)
-    return results
-
-def get_all_professionals(ids=None):
-    if redis_client.exists("PROFESSIONAL_ALL") > 0:
-        print("CACHE EXISTS HERE")
-        professional_all_dict_list = json.loads(redis_client.get("PROFESSIONAL_ALL"))
-        return professional_all_dict_list
-
-    print("NO CACHE EXISTS")
-    professional_all = get_all(Professional, ids=ids)
-    professional_all_dict_list = [professional.to_dict() for professional in professional_all]
-    redis_client.setex("PROFESSIONAL_ALL", 10, json.dumps(professional_all_dict_list))
-    return professional_all_dict_list
-
-def get_professional_with_id(id):
-    professional_all_dict_list = get_all_professionals()
-    def extract_professional(prof_data):
-        return prof_data['id'] == id
-    professional_dict = list(filter(extract_professional, professional_all_dict_list))[0]
-    return professional_dict
-
-pprint(get_professional_with_id(2))
+get_data()

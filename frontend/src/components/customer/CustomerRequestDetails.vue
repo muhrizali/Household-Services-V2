@@ -2,6 +2,7 @@
 import { useRoute } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { getAPI } from '@/httpreqs';
+
 const route = useRoute();
 const serviceRequestID = route.params.rid;
 
@@ -9,7 +10,7 @@ const serviceRequest = ref({});
 const serviceRequestFound = ref(false);
 const message = ref("");
 
-onMounted(async function () {
+async function initialLoad() {
     try {
         const response = await getAPI({ url: "/api/request", params: { "id": serviceRequestID } });
         if (response.data.found) {
@@ -21,7 +22,9 @@ onMounted(async function () {
     } catch (error) {
         message.value = "Something Went Wrong";
     }
-})
+}
+
+onMounted(initialLoad);
 
 </script>
 <template>
@@ -56,8 +59,10 @@ onMounted(async function () {
                         <tr>
                             <td class="text-lg font-bold underline">STATUS:</td>
                             <td>
-                                <span v-if="serviceRequest.status === 'REQUESTED'" class="badge badge-lg badge-error">REQUESTED</span>
-                                <span v-else-if="serviceRequest.status === 'ASSIGNED'" class="badge badge-lg badge-warning">ASSIGNED</span>
+                                <span v-if="serviceRequest.status === 'REQUESTED'"
+                                    class="badge badge-lg badge-error">REQUESTED</span>
+                                <span v-else-if="serviceRequest.status === 'ASSIGNED'"
+                                    class="badge badge-lg badge-warning">ASSIGNED</span>
                                 <span v-else class="badge badge-lg badge-success">CLOSED</span>
                             </td>
                         </tr>

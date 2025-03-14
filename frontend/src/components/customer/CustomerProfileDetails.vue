@@ -3,7 +3,6 @@ import { getAPI } from '@/httpreqs';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-const router = useRouter();
 const route = useRoute();
 
 const customerID = route.params.id;
@@ -69,9 +68,9 @@ onMounted(initialLoad);
                 </table>
                 <!-- Customer Actions -->
                 <div class="flex items-center justify-end gap-2">
-                    <a href="">
+                    <RouterLink :to="{ name: 'customer_profile_edit' }">
                         <button class="btn btn-sm btn-primary">EDIT</button>
-                    </a>
+                    </RouterLink>
                 </div>
             </div>
             <div v-else>

@@ -1,7 +1,9 @@
 <script setup>
 import { getAPI } from '@/httpreqs';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+
+const props = defineProps(['items']);
 
 const route = useRoute();
 const customerID = route.params.id;
@@ -11,7 +13,7 @@ const serviceRequests = ref([]);
 const message = ref('');
 
 async function initialLoad() {
-    const response = await getAPI({ url: '/api/request', params: { cid: customerID } });
+    const response = await getAPI({ url: '/api/request', params: { 'cid': customerID } });
     if (response.data.found) {
         serviceRequestsFound.value = true;
         serviceRequests.value = response.data.requests;
@@ -20,7 +22,20 @@ async function initialLoad() {
     }
 }
 
-onMounted(initialLoad);
+
+watch(() => props.items, (newItems, oldItems) => {
+    serviceRequests.value = newItems;
+})
+
+
+onMounted(async function () {
+    if (props.items?.length) {
+        serviceRequests.value = props.items;
+        serviceRequestsFound.value = true;
+    } else {
+        initialLoad();
+    }
+});
 
 </script>
 <template>
@@ -82,7 +97,7 @@ onMounted(initialLoad);
                 </table>
             </div>
             <div v-else>
-                <p class="text-xl text-center font-medium">Service Requests History not found</p>
+                <p class="text-xl text-center font-medium">No Service Requests Made</p>
             </div>
         </div>
     </section>
