@@ -341,6 +341,35 @@ def update_customer_profile(id, editdata):
     db.session.commit()
     cache_customers()
 
+
+def update_professional_profile(id, editdata):
+    professional = get_with_id(Professional, id)
+
+    if professional.user.fullname != editdata.get('fullname'):
+        professional.user.fullname = editdata.get('fullname')
+    
+    if professional.user.username != editdata.get('username'):
+        professional.user.username = editdata.get('username')
+    
+    if professional.user.email != editdata.get('email'):
+        professional.user.email = editdata.get('email')
+    
+    if professional.experience != editdata.get('experience'):
+        professional.experience = editdata.get('experience')
+    
+    if professional.description != editdata.get('description'):
+        professional.description = editdata.get('description')
+    
+    if professional.contact != editdata.get('contact'):
+        professional.contact = editdata.get('contact')
+    
+    if professional.address != editdata.get('address'):
+        professional.address = editdata.get('address')
+    
+    db.session.commit()
+    cache_professionals()
+
+
 def update_service_with_id(id, editdata):
     service = get_with_id(Service, id)
     service.name = editdata.get("name")

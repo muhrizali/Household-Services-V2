@@ -132,6 +132,10 @@ class ProfessionalAPI(Resource):
         if req.get("reject_selected"):
             update_professional_status(ids=req.get("ids"), approval="REJECTED")
             return jsonify({ "edited": True })
+        
+        if req.get('edit_profile'):
+            update_professional_profile(id=int(req.get('id')), editdata=req)
+            return jsonify({ 'edited': True })
                 
 
 

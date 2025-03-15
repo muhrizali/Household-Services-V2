@@ -20,7 +20,7 @@ function serviceRequestEditData() {
         'rating': rating.value,
         'remarks': remarks.value,
         'close_request': true,
-    }
+    };
 }
 
 async function initialLoad() {
@@ -127,29 +127,31 @@ onMounted(initialLoad);
             <h2 class="card-title text-lg">Rate Us!</h2>
             <form class="card-body form-control">
                 <table class="table">
-                    <!-- Selecting Service Type from DB -->
-                    <tr>
-                        <td class="text-lg font-bold underline">
-                            <label for="rating">RATING:</label>
-                        </td>
-                        <td>
-                            <select v-model="rating" id="rating" class="select w-full select-bordered">
-                                <option value='0'>--- SELECT ONE ---</option>
-                                <option v-for="rate in selectRatings" :value="rate.value">{{ rate.name }}</option>
-                            </select>
-                        </td>
-                    </tr>
+                    <tbody>
 
-                    <tr>
-                        <td class="text-lg font-bold underline">
-                            <label for="remarks">REMARKS (if any):</label>
-                        </td>
-                        <td>
-                            <textarea placeholder="Your Experience With Us" v-model="remarks" id="remarks"
-                                class="textarea w-full textarea-bordered">
-                            </textarea>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="text-lg font-bold underline">
+                                <label for="rating">RATING:</label>
+                            </td>
+                            <td>
+                                <select v-model="rating" id="rating" class="select w-full select-bordered">
+                                    <option value='0'>--- SELECT ONE ---</option>
+                                    <option v-for="rate in selectRatings" :value="rate.value">{{ rate.name }}</option>
+                                </select>
+                            </td>
+                        </tr>
+    
+                        <tr>
+                            <td class="text-lg font-bold underline">
+                                <label for="remarks">REMARKS (if any):</label>
+                            </td>
+                            <td>
+                                <textarea placeholder="Your Experience With Us" v-model="remarks" id="remarks"
+                                    class="textarea w-full textarea-bordered">
+                                </textarea>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
 
                 <!-- Rating Actions -->

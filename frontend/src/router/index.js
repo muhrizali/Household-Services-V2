@@ -33,6 +33,10 @@ import CustomerRequestBook from '@/components/customer/CustomerRequestBook.vue';
 import CustomerRequestClose from '@/components/customer/CustomerRequestClose.vue';
 import CustomerProfileEdit from '@/components/customer/CustomerProfileEdit.vue';
 import CustomerSearch from '@/components/customer/CustomerSearch.vue';
+import ProfessionalDashboardView from '@/views/ProfessionalDashboardView.vue';
+import ProfessionalSearch from '@/components/professionals/ProfessionalSearch.vue';
+import ProfessionalProfileDetails from '@/components/professionals/ProfessionalProfileDetails.vue';
+import ProfessionalProfileEdit from '@/components/professionals/ProfessionalProfileEdit.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -210,9 +214,30 @@ const router = createRouter({
           ]
         },
         {
-          path: "professional",
-          name: "professional_home",
-          component: ProfessionalHome
+          path: "professional/:id",
+          component: ProfessionalDashboardView,
+          children: [
+            {
+              path: "",
+              name: "professional_home",
+              component: ProfessionalHome,
+            },
+            {
+              path: "search",
+              name: "professional_search",
+              component: ProfessionalSearch,
+            },
+            {
+              path: "profile",
+              name: "professional_profile_details",
+              component: ProfessionalProfileDetails,
+            },
+            {
+              path: "edit",
+              name: "professional_profile_edit",
+              component: ProfessionalProfileEdit,
+            },
+          ]
         },
       ]
     },
