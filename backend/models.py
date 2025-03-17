@@ -340,7 +340,7 @@ class ServiceRequest(db.Model):
         return {
             "id": self.id,
             "service": self.service.to_dict(),
-            "professional": self.professional(),
+            "professional": self.get_professional(),
             "customer": self.customer.to_dict(),
             "status": self.status,
             "rating": self.rating or "??",
@@ -378,11 +378,11 @@ class ServiceRequest(db.Model):
     #         return {}
     #     return serv.to_dict()
 
-    def professional(self):
-        prof = get_with_id(Professional, self.professional_id)
-        if not prof:
+    def get_professional(self):
+        professional = get_with_id(Professional, self.professional_id)
+        if not professional:
             return {}
-        return prof.to_dict()
+        return professional.to_dict()
 
 # helpful functions
 def get_all(model):

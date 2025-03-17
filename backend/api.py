@@ -237,6 +237,28 @@ class ServiceRequestAPI(Resource):
             else:
                 return jsonify({ 'found': False })
         
+        if req.get("assigned_requests"):
+            service_requests = get_assigned_requests_with_pid(pid = int(req.get('pid')))
+            if service_requests:
+                return jsonify({ 'found': True, 'requests': service_requests })
+            else:
+                return jsonify({ 'found': False })
+
+        if req.get("new_requests"):
+            service_requests = get_new_requests_with_pid(pid = int(req.get('pid')))
+            if service_requests:
+                return jsonify({ 'found': True, 'requests': service_requests })
+            else:
+                return jsonify({ 'found': False })
+
+        if req.get("closed_requests"):
+            service_requests = get_closed_requests_with_pid(pid = int(req.get('pid')))
+            if service_requests:
+                return jsonify({ 'found': True, 'requests': service_requests })
+            else:
+                return jsonify({ 'found': False })
+
+        
         service_requests = get_all_requests()
         if service_requests:
             return jsonify({ "found": True, "requests": service_requests })
@@ -261,13 +283,22 @@ class ServiceRequestAPI(Resource):
         req = request.get_json()
 
         if req.get('edit_request'):
-            update_service_request_with_id(int(req.get("id")), req)
+            update_service_request_with_id(id=int(req.get("id")), editdata=req)
             return jsonify({ "edited": True })
+        
         if req.get('close_request'):
-            close_service_request_with_id(int(req.get('id')), req)
+            close_service_request_with_id(id=int(req.get('id')), editdata=req)
             return jsonify({ "edited": True })
-        else:
-            return jsonify({ "edited": False })
+        
+        if req.get('accept_request'):
+            accept_service_request_with_pid(id=int(req.get('id')), editdata=req)
+            return jsonify({ 'edited': True })
+
+        if req.get('reject_request'):
+            reject_service_request_with_pid(id=int(req.get('id')), editdata=req)
+            return jsonify({ 'edited': True })
+
+
 
 
     def delete(self):

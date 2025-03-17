@@ -158,6 +158,28 @@ def get_all_requests_with_cid(cid):
     filtered = list(filter(extract_service_requests, service_requests))
     return filtered
 
+def get_assigned_requests_with_pid(pid):
+    service_requests = get_all_requests()
+    def extract_assigned_requests(service_request):
+        return (service_request['status'] == 'ASSIGNED' and service_request['professional']['id'] == pid)
+        # return (service_request['professional']['id'] == pid)
+    filtered = list(filter(extract_assigned_requests, service_requests))
+    return filtered
+
+def get_new_requests_with_pid(pid):
+    service_requests = get_all_requests()
+    def extract_assigned_requests(service_request):
+        return (service_request['status'] == 'REQUESTED' and service_request['professional'] and service_request['professional']['id'] == pid)
+    filtered = list(filter(extract_assigned_requests, service_requests))
+    return filtered
+
+def get_closed_requests_with_pid(pid):
+    service_requests = get_all_requests()
+    def extract_assigned_requests(service_request):
+        return (service_request['status'] == 'CLOSED' and service_request['professional'] and service_request['professional']['id'] == pid)
+    filtered = list(filter(extract_assigned_requests, service_requests))
+    return filtered
+
 
 
 # GETTING SINGLE DB OBJECTS
@@ -396,6 +418,22 @@ def close_service_request_with_id(id, editdata):
     service_request.remarks = editdata.get('remarks')
     service_request.status = "CLOSED"
     service_request.completed = datetime.now()
+    db.session.commit()
+    cache_service_requests()
+
+def accept_service_request_with_pid(id, editdata):
+    service_request = get_with_id(ServiceRequest, id)
+    accepting_professional = get_with_id(Professional, int(editdata.get('pid')))
+    service_request.professional_id = accepting_professional.id
+    service_request.status = "ASSIGNED"
+    db.session.commit()
+    cache_service_requests()
+
+def reject_service_request_with_pid(id, editdata):
+    service_request = get_with_id(ServiceRequest, id)
+    rejecting_professional = get_with_id(Professional, int(editdata.get('pid')))
+    service_request.professional_id = rejecting_professional.id
+    service_request.status = "REQUESTED"
     db.session.commit()
     cache_service_requests()
 

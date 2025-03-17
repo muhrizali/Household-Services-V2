@@ -37,6 +37,9 @@ import ProfessionalDashboardView from '@/views/ProfessionalDashboardView.vue';
 import ProfessionalSearch from '@/components/professionals/ProfessionalSearch.vue';
 import ProfessionalProfileDetails from '@/components/professionals/ProfessionalProfileDetails.vue';
 import ProfessionalProfileEdit from '@/components/professionals/ProfessionalProfileEdit.vue';
+import ProfessionalRequestDetails from '@/components/professionals/ProfessionalRequestDetails.vue';
+import ProfessionalRequestAccept from '@/components/professionals/ProfessionalRequestAccept.vue';
+import ProfessionalRequestReject from '@/components/professionals/ProfessionalRequestReject.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -236,6 +239,21 @@ const router = createRouter({
               path: "edit",
               name: "professional_profile_edit",
               component: ProfessionalProfileEdit,
+            },
+            {
+              path: "request/:rid",
+              name: "professional_request_details",
+              component: ProfessionalRequestDetails,
+            },
+            {
+              path: "request/accept/:rid",
+              name: "professional_request_accept",
+              component: ProfessionalRequestAccept,
+            },
+            {
+              path: "request/reject/:rid",
+              name: "professional_request_reject",
+              component: ProfessionalRequestReject,
             },
           ]
         },
