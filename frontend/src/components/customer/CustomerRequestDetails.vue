@@ -46,6 +46,24 @@ onMounted(initialLoad);
                             </td>
                         </tr>
                         <tr>
+                            <td class="text-lg font-bold underline">CONTACT:</td>
+                            <td>
+                                {{ serviceRequest.customer.contact }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-lg font-bold underline">LOCATION:</td>
+                            <td>
+                                {{ serviceRequest.customer.address }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-lg font-bold underline">PIN CODE:</td>
+                            <td>
+                                {{ serviceRequest.customer.pincode }}
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="text-lg font-bold underline">SERVICE:</td>
                             <td>{{ serviceRequest.service.name }}</td>
                         </tr>

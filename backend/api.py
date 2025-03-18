@@ -230,6 +230,7 @@ class ServiceRequestAPI(Resource):
                 return jsonify({ "service_request": service_request, "found": True })
             else:
                 return jsonify({ "found": False })
+
         if req.get("cid"):
             service_requests = get_all_requests_with_cid(cid = int(req.get('cid')))
             if service_requests:
@@ -257,6 +258,13 @@ class ServiceRequestAPI(Resource):
                 return jsonify({ 'found': True, 'requests': service_requests })
             else:
                 return jsonify({ 'found': False })
+
+        # if req.get("search_all_requests"):
+        #     service_requests = get_closed_requests_with_pid(pid = int(req.get('pid')))
+        #     if service_requests:
+        #         return jsonify({ 'found': True, 'requests': service_requests })
+        #     else:
+        #         return jsonify({ 'found': False })
 
         
         service_requests = get_all_requests()
@@ -334,10 +342,16 @@ class SearchAPI(Resource):
             results = [service.to_dict() for service in services]
             return jsonify({ "found": True, "type": "SERVICE", "results": results })
         
+        elif parameter.startswith("request") and reqs.get('pid'):
+            service_requests = search_request_objects_with_pid(int(reqs.get('pid')), parameter, query)
+            results = [service_request.to_dict() for service_request in service_requests]
+            return jsonify({ "found": True, "type": "SERVICE_REQUEST", "results": results })
+
         elif parameter.startswith("request"):
             service_requests = search_objects(parameter, query)
             results = [service_request.to_dict() for service_request in service_requests]
             return jsonify({ "found": True, "type": "SERVICE_REQUEST", "results": results })
+
 
         
 

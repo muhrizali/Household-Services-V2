@@ -287,7 +287,6 @@ def search_service_objects(parameter, query):
 def search_request_objects(parameter, query):
     if (query == ""):
         return get_all(ServiceRequest)
-
     query = '%' + query + '%'
     if parameter == "request_service_name":
         sql = select(ServiceRequest).join(Service).where(Service.name.ilike(query))
@@ -295,6 +294,33 @@ def search_request_objects(parameter, query):
         sql = select(ServiceRequest).join(Customer).join(User, Customer.user_id == User.id).where(User.fullname.ilike(query))
     elif parameter == "request_professional_name":
         sql = select(ServiceRequest).join(Professional, ServiceRequest.professional_id == Professional.id).join(User, Professional.user_id == User.id).where(User.fullname.ilike(query))
+    return db.session.scalars(sql)
+
+def search_request_objects_with_pid(pid, parameter, query):
+    if (query == ""):
+        sql = select(ServiceRequest).where(ServiceRequest.professional_id == pid)
+        return db.session.scalars(sql)
+    query = '%' + query + '%'
+    if parameter == "request_service_name":
+        sql = select(ServiceRequest).join(Service).where(
+            and_(
+                Service.name.ilike(query),
+                ServiceRequest.professional_id == pid
+        ))
+    elif parameter == "request_customer_name":
+        sql = select(ServiceRequest).join(Customer).join(User, Customer.user_id == User.id).where(
+            and_(
+                User.fullname.ilike(query),
+                ServiceRequest.professional_id == pid
+            )
+    )
+    elif parameter == "request_professional_name":
+        sql = select(ServiceRequest).join(Professional, ServiceRequest.professional_id == Professional.id).join(User, Professional.user_id == User.id).where(
+            and_(
+                User.fullname.ilike(query),
+                ServiceRequest.professional_id == pid
+            )
+        )
     return db.session.scalars(sql)
 
 
