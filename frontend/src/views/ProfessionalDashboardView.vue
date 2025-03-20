@@ -1,5 +1,5 @@
 <script setup>
-import { logoutUser } from '@/fns';
+import { logoutUser, sameLoggedinUser } from '@/fns';
 import { getAPI } from '@/httpreqs';
 import { onMounted, ref } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
@@ -22,6 +22,9 @@ async function initialLoad() {
     professional.value = response.data.professional;
   } else {
     message.value = 'Professional Not Found';
+  }
+  if (!sameLoggedinUser(professional.value.user.email)) {
+    router.push({ name: 'access_not_allowed' });
   }
 }
 

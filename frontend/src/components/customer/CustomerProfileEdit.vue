@@ -69,7 +69,7 @@ onMounted(initialLoad);
             </div>
             
             <div v-if="customerFound">
-                <form class="form-control">
+                <form @submit.prevent="onSubmitClick" class="form-control">
                     <table class="table table-lg">
                         <tbody>
 
@@ -78,7 +78,12 @@ onMounted(initialLoad);
                                     <label for="fullname">FULL NAME:</label>
                                 </td>
                                 <td>
-                                    <input v-model="fullname" type="text" id="fullname" class="input w-full input-bordered">
+                                    <input 
+                                    v-model="fullname" 
+                                    type="text"
+                                    maxlength="200" 
+                                    id="fullname" 
+                                    class="input w-full input-bordered">
                                 </td>
                             </tr>
                             <tr>
@@ -86,7 +91,12 @@ onMounted(initialLoad);
                                     <label for="username">USERNAME:</label>
                                 </td>
                                 <td>
-                                    <input v-model="username" type="text" id="username" class="input w-full input-bordered">
+                                    <input 
+                                    v-model="username" 
+                                    type="text"
+                                    maxlength="30" 
+                                    id="username" 
+                                    class="input w-full input-bordered">
                                 </td>
                             </tr>
                             <tr>
@@ -94,7 +104,11 @@ onMounted(initialLoad);
                                     <label for="email">EMAIL:</label>
                                 </td>
                                 <td>
-                                    <input v-model="email" id="email" type="email" class="input w-full input-bordered">
+                                    <input 
+                                    v-model="email" 
+                                    id="email" 
+                                    type="email" 
+                                    class="input w-full input-bordered">
                                 </td>
                             </tr>
                             <tr>
@@ -102,7 +116,12 @@ onMounted(initialLoad);
                                     <label for="contact">CONTACT:</label>
                                 </td>
                                 <td>
-                                    <input v-model="contact" id="contact" type="text" class="input w-full input-bordered">
+                                    <input 
+                                    v-model="contact" 
+                                    id="contact" 
+                                    type="text"
+                                    pattern="[0-9]{10}" 
+                                    class="input w-full input-bordered">
                                 </td>
                             </tr>
                             <tr>
@@ -119,12 +138,17 @@ onMounted(initialLoad);
                                     <label for="pincode">PIN CODE:</label>
                                 </td>
                                 <td>
-                                    <input v-model="pincode" id="pincode" type="text" class="input w-full input-bordered">
+                                    <input 
+                                    v-model="pincode" 
+                                    id="pincode" 
+                                    type="text"
+                                    pattern="[0-9]{6}" 
+                                    class="input w-full input-bordered">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <button @click.prevent="onSubmitClick" class="btn btn-block btn-lg btn-warning mt-8">EDIT</button>
+                    <input type="submit" value="EDIT" class="btn btn-block btn-lg btn-warning mt-8" />
                 </form>
             </div>
             <div v-else>

@@ -35,25 +35,28 @@ def protected():
     current_user_username = get_jwt_identity()
     user = get_user_with_username(current_user_username)
     if user.role == "CUSTOMER":
-        return {
+        return jsonify({
             "logged_in": True,
             "id": user.get_customer().id,
-            "user": user.email, 
+            "useremail": user.email, 
+            "username": user.username, 
             "role": "CUSTOMER", 
-        }
+        })
     elif user.role == "PROFESSIONAL":
-        return {
+        return jsonify({
             "logged_in": True,
             "id": user.get_prof().id,
-            "user": user.email, 
+            "useremail": user.email, 
+            "username": user.username, 
             "role": "PROFESSIONAL", 
-        }
+        })
     elif user.role == "ADMIN":
-        return {
+        return jsonify({
             "logged_in": True,
-            "user": user.email, 
+            "useremail": user.email, 
+            "username": user.username, 
             "role": "ADMIN",
-        }
+        })
 
 
 # API resources
@@ -117,11 +120,11 @@ class ProfessionalAPI(Resource):
         # print(new_user)
         try:
             add_professional_user(new_user['user'], new_user['professional'])
-            resp = { "message": "Professional Successfully Added" }
+            resp = { "added": True }
             return resp
         except:
-            resp = { "message": "Error While Registering User" }
-            return resp, 400
+            resp = { "added": False }
+            return resp
     
     def put(self):
         req = request.get_json()
@@ -157,11 +160,11 @@ class CustomerAPI(Resource):
         new_user = request.get_json()
         try:
             add_customer_user(new_user.get('user'), new_user.get('customer'))
-            resp = { "message": "Customer Successfully Added" }
+            resp = { "added": True }
             return resp
         except:
-            resp = { "message": "Error While Registering User" }
-            return resp, 400
+            resp = { "added": False, "message": "Email, username or contact already exists" }
+            return resp
 
     def put(self):
         req = request.get_json()

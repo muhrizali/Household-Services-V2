@@ -11,7 +11,6 @@ const email = ref("");
 const password = ref("");
 
 const messages = ref([]);
-const test = ref("s");
 
 async function initialLoad() {
   const response = await checkAuth();
@@ -29,7 +28,6 @@ async function initialLoad() {
   } else {
     router.push({ name: 'login' });
   }
-  test.value = response;
 }
 
 function loginData() {
@@ -43,6 +41,7 @@ function addMessage(msg) {
 function checkLoginForm() {
   let validEmail = (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value));
   let validPassword = (password.value.length > 0);
+  
   if (!validEmail) {
     addMessage("EMAIL: Please enter valid email address");
   }
@@ -84,10 +83,9 @@ onMounted(() => {
 </script>
 <template>
   <div class="card card-bordered w-1/2">
-    <form class="card-body form-control">
+    <form @submit.prevent="onLoginClick" class="card-body form-control">
 
       <h2 class="card-title text-2xl text-center">Login</h2>
-      {{ test }}
       <div v-if="messages.length"
         class="bg-warning font-semibold p-4 my-4 rounded-md border-2 border-warning-content/50">
         <ul>
@@ -103,8 +101,13 @@ onMounted(() => {
               <label for="email">EMAIL</label>
             </td>
             <td>
-              <input v-model="email" id="email" placeholder="EMAIL@ORG.COM" type="email" required
-                class="input w-full input-bordered" />
+              <input 
+              v-model="email" 
+              id="email" 
+              placeholder="EMAIL@ORG.COM" 
+              type="email"
+              required
+              class="input w-full input-bordered" />
             </td>
           </tr>
           <tr>
@@ -112,14 +115,20 @@ onMounted(() => {
               <label for="password">PASSWORD</label>
             </td>
             <td>
-              <input v-model="password" id="password" placeholder="YOUR-SECRET-PASSWORD" type="password" required
-                class="input w-full input-bordered" />
+              <input 
+              v-model="password" 
+              id="password" 
+              placeholder="YOUR-SECRET-PASSWORD" 
+              type="password" 
+              required
+              maxlength="60"
+              class="input w-full input-bordered" />
             </td>
           </tr>
         </tbody>
       </table>
+      <input type="submit" value="LOGIN" class="btn btn-block btn-lg btn-primary" />
 
-      <button type="button" @click="onLoginClick" class="btn btn-block btn-lg btn-primary">LOGIN</button>
       <p class="text-center pt-2">
         New member? <RouterLink :to="{ name: 'customer_register' }" class="link link-primary">Create Account
         </RouterLink>

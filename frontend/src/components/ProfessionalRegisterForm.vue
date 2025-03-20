@@ -15,7 +15,7 @@ let description_ = ref("");
 let address_ = ref("");
 let pincode_ = ref("");
 
-let message = ref("NOTHING");
+let messages = ref([]);
 
 let servicesData = ref([]);
 // let errors = ref([]);
@@ -40,6 +40,40 @@ const registerProfessionalData = () => {
   };
 };
 
+function addMessage(msg) {
+  messages.value.push(msg);
+}
+
+function checkForm() {
+  if (password_.value !== confirm_.value) {
+    addMessage("Passwords do not match");
+    return false;
+  }
+  return true;
+}
+
+async function onRegisterClick() {
+  try {
+    if (checkForm()) {
+      const resp = await postAPI({ url: "/api/professional", data: registerProfessionalData() });
+      if (resp.data.added) {
+        addMessage("Successfully Registered User");
+        setTimeout(() => {
+          router.push({ name: "login" });
+        }, 2000);
+      } else {
+        addMessage("Error Registering User");
+        addMessage("Email, username or contact already exists");
+      }
+    } else {
+      addMessage("Invalid form inputs");
+    }
+  } catch (error) {
+    addMessage("Error Registering User");
+  }
+}  
+
+
 onMounted(async function () {
   try {
     const resp = await getAPI({ url: "/api/service" });
@@ -48,25 +82,18 @@ onMounted(async function () {
     servicesData.value = [ { id: 99, name: "Error Fetching Services" } ];
   }
 })
-
-async function onRegisterClick() {
-  try {
-    const resp = await postAPI({
-      url: "/api/professional",
-      data: registerProfessionalData()
-    });
-    message.value = "Successfully Registered User";
-    router.push({ name: "login" });
-  } catch (error) {
-    message.value = "Error Registering User";
-  }
-}  
 </script>
 
 <template>
   <div class="card card-bordered w-1/2">
-    <form method="post" class="card-body form-control">
+    <form @submit.prevent="onRegisterClick" class="card-body form-control">
       <h2 class="card-title text-2xl text-center">Professional Signup</h2>
+      <div v-if="messages.length"
+        class="bg-warning font-semibold p-4 my-4 rounded-md border-2 border-warning-content/50">
+        <ul>
+          <li class="text-base-content" v-for="message in messages">{{ message }}</li>
+        </ul>
+      </div>
       <table class="table table-lg">
         <tbody>
           <tr>
@@ -74,7 +101,14 @@ async function onRegisterClick() {
               <label for="email">EMAIL</label>
             </td>
             <td>
-              <input v-model="email_" id="email" type="email" placeholder="EMAIL@ORG.COM" class="input w-full input-bordered" />
+              <input 
+              v-model="email_" 
+              id="email" 
+              type="email"
+              required
+              maxlength="200" 
+              placeholder="EMAIL@ORG.COM" 
+              class="input w-full input-bordered" />
             </td>
           </tr>
           <tr>
@@ -82,7 +116,14 @@ async function onRegisterClick() {
               <label for="fullname">FULL NAME</label>
             </td>
             <td>
-              <input v-model="fullname_" id="fullname" type="text" placeholder="JOHN DOE" class="input w-full input-bordered" />
+              <input 
+              v-model="fullname_" 
+              id="fullname" 
+              type="text"
+              required
+              maxlength="200" 
+              placeholder="JOHN DOE" 
+              class="input w-full input-bordered" />
             </td>
           </tr>
           <tr>
@@ -90,7 +131,14 @@ async function onRegisterClick() {
               <label for="username">USERNAME</label>
             </td>
             <td>
-              <input v-model="username_" id="username" type="text" placeholder="JOHNDOE" class="input w-full input-bordered">
+              <input 
+              v-model="username_" 
+              id="username" 
+              type="text"
+              required
+              maxlength="30" 
+              placeholder="JOHNDOE" 
+              class="input w-full input-bordered">
             </td>
           </tr>
           <tr>
@@ -98,7 +146,14 @@ async function onRegisterClick() {
               <label for="password">PASSWORD</label>
             </td>
             <td>
-              <input v-model="password_" id="password" type="password" placeholder="SECRET" class="input w-full input-bordered">
+              <input 
+              v-model="password_" 
+              id="password" 
+              type="password"
+              required
+              maxlength="60"
+              placeholder="SECRET"
+              class="input w-full input-bordered">
             </td>
           </tr>
           <tr>
@@ -106,7 +161,14 @@ async function onRegisterClick() {
               <label for="confirm">CONFIRM PASSWORD</label>
             </td>
             <td>
-              <input v-model="confirm_" id="confirm" type="password" placeholder="SECRET" class="input w-full input-bordered">
+              <input 
+              v-model="confirm_" 
+              id="confirm" 
+              type="password"
+              required
+              maxlength="60" 
+              placeholder="SECRET" 
+              class="input w-full input-bordered">
             </td>
           </tr>
 
@@ -115,7 +177,12 @@ async function onRegisterClick() {
               <label for="service_id">SERVICE</label>
             </td>
             <td>
-              <select v-model="service_id_" name="service_id" id="service_id" class="select w-full select-bordered">
+              <select 
+              v-model="service_id_" 
+              name="service_id" 
+              id="service_id"
+              required 
+              class="select w-full select-bordered">
                 <option disabled value="" selected>--- SELECT ONE SERVICE ---</option>
                 <option v-for="serviceData in servicesData" :value="serviceData.id">{{ serviceData.name || "Unknown" }}</option>
               </select>
@@ -127,7 +194,14 @@ async function onRegisterClick() {
               <label for="contact">CONTACT</label>
             </td>
             <td>
-              <input v-model="contact_" id="contact" type="text" placeholder="PHONE NUMBER" class="input w-full input-bordered">
+              <input 
+              v-model="contact_" 
+              id="contact" 
+              type="tel"
+              pattern="[0-9]{10}"
+              required
+              placeholder="PHONE NUMBER" 
+              class="input w-full input-bordered">
             </td>
           </tr>
           <tr>
@@ -135,24 +209,27 @@ async function onRegisterClick() {
               <label for="experience">EXPERIENCE</label>
             </td>
             <td>
-              <input v-model="experience_" id="experience" type="number" placeholder="YEARS" class="input w-full input-bordered">
+              <input 
+              v-model="experience_" 
+              id="experience" 
+              type="number"
+              required
+              placeholder="YEARS" 
+              class="input w-full input-bordered">
             </td>
           </tr>
-          <!-- <tr>
-            <td>
-              <label for="docs">DOCUMENTS</label>
-            </td>
-            <td>
-              <input id="docs" type="file" class="file-input w-full file-input-bordered">
-            </td>
-          </tr> -->
           <tr>
             <td>
               <label for="description">DESCRIPTION</label>
             </td>
             <td>
-              <textarea v-model="description_" name="description" id="description" rows="4" placeholder="ABOUT YOURSELF"
-                class="textarea w-full textarea-bordered"></textarea>
+              <textarea 
+              v-model="description_" 
+              name="description" 
+              id="description" 
+              rows="4" 
+              placeholder="ABOUT YOURSELF"
+              class="textarea w-full textarea-bordered"></textarea>
             </td>
           </tr>
           <tr>
@@ -160,8 +237,14 @@ async function onRegisterClick() {
               <label for="address">ADDRESS</label>
             </td>
             <td>
-              <textarea v-model="address_" name="address" id="address" rows="4" placeholder="YOUR ADDRESS"
-                class="textarea w-full textarea-bordered"></textarea>
+              <textarea 
+              v-model="address_" 
+              name="address" 
+              id="address" 
+              rows="4"
+              required 
+              placeholder="YOUR ADDRESS..."
+              class="textarea w-full textarea-bordered"></textarea>
             </td>
           </tr>
 
@@ -170,12 +253,19 @@ async function onRegisterClick() {
               <label for="pincode">PIN CODE</label>
             </td>
             <td>
-              <input v-model="pincode_" id="pincode" type="number" class="input w-full input-bordered">
+              <input 
+              v-model="pincode_" 
+              id="pincode"
+              type="text"
+              required
+              pattern="[0-9]{6}"
+              placeholder="123321"
+              class="input w-full input-bordered">
             </td>
           </tr>
         </tbody>
       </table>
-      <button type="button" @click="onRegisterClick" class="btn btn-block btn-lg btn-primary">REGISTER</button>
+      <input type="submit" value="REGISTER" class="btn btn-block btn-lg btn-primary" />
 
       <p class="text-center pt-2">
         Already a member?

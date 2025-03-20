@@ -52,7 +52,8 @@ def login_user(user_obj):
             "access_token": access_token,
             "logged_in": True,
             "id": user_obj.get_customer().id,
-            "user": user_obj.email, 
+            "useremail": user_obj.email, 
+            "username": user_obj.username, 
             "role": "CUSTOMER", 
         }
     elif user_obj.role == "PROFESSIONAL":
@@ -60,14 +61,16 @@ def login_user(user_obj):
             "access_token": access_token,
             "logged_in": True,
             "id": user_obj.get_prof().id,
-            "user": user_obj.email, 
+            "useremail": user_obj.email, 
+            "username": user_obj.username, 
             "role": "PROFESSIONAL", 
         }
     elif user_obj.role == "ADMIN":
         return {
             "access_token": access_token,
             "logged_in": True,
-            "user": user_obj.email, 
+            "useremail": user_obj.email, 
+            "username": user_obj.username, 
             "role": "ADMIN",
         }
 
@@ -386,6 +389,9 @@ def update_customer_profile(id, editdata):
     if customer.address != editdata.get('address'):
         customer.address = editdata.get('address')
     
+    if customer.pincode != editdata.get('pincode'):
+        customer.pincode = editdata.get('pincode')
+    
     db.session.commit()
     cache_customers()
 
@@ -413,6 +419,9 @@ def update_professional_profile(id, editdata):
     
     if professional.address != editdata.get('address'):
         professional.address = editdata.get('address')
+    
+    if professional.pincode != editdata.get('pincode'):
+        professional.pincode = editdata.get('pincode')
     
     db.session.commit()
     cache_professionals()
@@ -469,6 +478,7 @@ def delete_with_id(model, pkid):
     sql = delete(model).where(model.id == pkid)
     db.session.execute(sql)
     db.session.commit()
+
 
 def delete_service_with_id(id):
     delete_with_id(Service, id)

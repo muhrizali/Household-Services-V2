@@ -40,6 +40,7 @@ import ProfessionalProfileEdit from '@/components/professionals/ProfessionalProf
 import ProfessionalRequestDetails from '@/components/professionals/ProfessionalRequestDetails.vue';
 import ProfessionalRequestAccept from '@/components/professionals/ProfessionalRequestAccept.vue';
 import ProfessionalRequestReject from '@/components/professionals/ProfessionalRequestReject.vue';
+import AccessNotAllowed from '@/components/AccessNotAllowed.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -56,8 +57,13 @@ const router = createRouter({
         {
           path: "login",
           name: "login",
-          component: LoginForm
-        }
+          component: LoginForm,
+        },
+        {
+          path: "access-not-allowed",
+          name: "access_not_allowed",
+          component: AccessNotAllowed,
+        },
       ]
     },
     {

@@ -1,8 +1,19 @@
 <script setup>
-import { logoutUser } from '@/fns';
+import { logoutUser, sameLoggedinUser } from '@/fns';
+import { onMounted } from 'vue';
 import { RouterLink, RouterView, useRouter } from 'vue-router';
 
 const router = useRouter();
+
+function initialLoad() {
+  if (!sameLoggedinUser("admin@hhs.org")) {
+    router.push({ name: 'access_not_allowed' });
+  }
+}
+
+onMounted(() => {
+  initialLoad();
+})
 
 function onLogoutClick() {
   logoutUser();
