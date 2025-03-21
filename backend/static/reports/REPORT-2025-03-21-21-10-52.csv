@@ -1,0 +1,13 @@
+REQUEST_ID,SERVICE_ID,SERVICE_NAME,CUSTOMER_ID,CUSTOMER_NAME,PROFESSIONAL_ID,PROFESSIONAL_NAME,STATUS,RATING,REMARKS,COMPLETED,CREATED
+6,1,Service A (db),1,Customer A,1,Professional A,CLOSED,5,5 stars,2025-03-17 16:12:41,2025-03-17 10:35:43
+7,1,Service A (db),1,Customer A,2,Professional B,ASSIGNED,NIL,NIL,In-Progess,2025-03-17 10:35:43
+8,1,Service A (db),3,Customer C,1,Professional A,REQUESTED,NIL,NIL,In-Progess,2025-03-17 10:35:43
+9,1,Service A (db),4,Customer D,1,Professional A,REQUESTED,NIL,NIL,In-Progess,2025-03-17 10:35:43
+10,3,Service C (db),3,Customer C,3,Professional C,ASSIGNED,NIL,NIL,In-Progess,2025-03-17 10:35:43
+11,4,Service D (db),4,Customer D,4,Professional D,ASSIGNED,NIL,NIL,In-Progess,2025-03-17 10:35:43
+12,1,Service A (db),1,Customer A,1,Professional A,CLOSED,4,Remarks for this service,2025-03-17 16:05:43,2025-03-17 10:35:43
+13,1,Service A (db),2,Customer B,1,Professional A,CLOSED,4,Remarks for this service,2025-03-17 16:05:43,2025-03-17 10:35:43
+14,1,Service A (db),5,Customer E,1,Professional A,CLOSED,4,Remarks for this service,2025-03-17 16:05:43,2025-03-17 10:35:43
+15,1,Service A (db),6,Customer F,1,Professional A,CLOSED,4,Remarks for this service,2025-03-17 16:05:43,2025-03-17 10:35:43
+16,1,Service A (db),1,Customer A,1,Professional A,REQUESTED,NIL,NIL,In-Progess,2025-03-18 09:47:36
+17,1,Service A (db),1,Customer A,1,Professional A,ASSIGNED,NIL,NIL,In-Progess,2025-03-18 09:47:45

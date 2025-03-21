@@ -350,6 +350,33 @@ class ServiceRequest(db.Model):
             "created": self.created.strftime("%Y-%m-%d %H:%M:%S"),
             "updated": self.updated.strftime("%Y-%m-%d %H:%M:%S"),
         }
+    
+    def to_csv_dict(self):
+        service = self.service.to_dict()
+        customer = self.customer.to_dict()
+        professional = self.get_professional()
+
+        service_id = service.get('id')
+        service_name = service.get('name')
+        customer_id = customer.get('id')
+        customer_name = customer['user'].get('fullname')
+        professional_id = professional.get('id', 'NIL')
+        professional_name = professional.get('user').get('fullname') if professional.get('user') else 'NIL'
+
+        return {
+            "REQUEST_ID": self.id,
+            "SERVICE_ID": service_id,
+            "SERVICE_NAME": service_name,
+            "CUSTOMER_ID": customer_id,
+            "CUSTOMER_NAME": customer_name,
+            "PROFESSIONAL_ID": professional_id,
+            "PROFESSIONAL_NAME": professional_name,
+            "STATUS": self.status,
+            "RATING": self.rating or "NIL",
+            "REMARKS": self.remarks or "NIL",
+            "COMPLETED": self.completed_time(),
+            "CREATED": self.created.strftime("%Y-%m-%d %H:%M:%S"),
+        }
 
     def stars(self):
         if self.rating == 1:

@@ -5,8 +5,21 @@ from bcrypt import gensalt, hashpw, checkpw
 from datetime import datetime
 from flask_jwt_extended import create_access_token
 from redis import Redis
-import json
+from apps import celery_app as capp
+from celery import Celery
+from celery.schedules import crontab
+from datetime import datetime
+import json, csv
 
+
+# Setting up scheduling for celery
+# @capp.on_after_finalize.connect
+# def setup_periodic_tasks(sender: Celery, **kwargs):
+#     sender.add_periodic_task(
+#         crontab(minute=1),
+#         generate_csv_report_task.s(),
+#         name='generate report every minute'
+#     )
 
 # CACHING FROM DB
 redis_client = Redis(decode_responses=True)
@@ -338,6 +351,35 @@ def search_objects(parameter, query):
         return search_request_objects(parameter, query)
 
 
+# GENERATING REPORTS FUNCTIONS
+@capp.task
+def generate_csv_report_task():
+    service_requests = get_all(ServiceRequest)
+    timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    with open(f'static/reports/REPORT-{timestamp}.csv', mode='w') as csvfile:
+        fieldnames = [
+            "REQUEST_ID",
+            "SERVICE_ID",
+            "SERVICE_NAME",
+            "CUSTOMER_ID",
+            "CUSTOMER_NAME",
+            "PROFESSIONAL_ID",
+            "PROFESSIONAL_NAME",
+            "STATUS",
+            "RATING",
+            "REMARKS",
+            "COMPLETED",
+            "CREATED",
+        ]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        # writer.writerow(service_requests[1].to_csv_dict())
+        for sr in list(service_requests):
+            writer.writerow(sr.to_csv_dict())
+def generate_csv_report():
+    generate_csv_report_task.delay()
+
+
 # MANAGEMENT DB FUNCTIONS
 def delete_all_with_ids(model, ids):
     sql = delete(model).where(model.id.in_(ids))
@@ -345,33 +387,47 @@ def delete_all_with_ids(model, ids):
     db.session.commit()
 
 
-def delete_services_with_ids(ids):
+@capp.task
+def delete_services_with_ids_task(ids):
     delete_all_with_ids(Service, ids)
     cache_services()
+def delete_services_with_ids(ids):
+    # CELERY
+    delete_services_with_ids_task.delay(ids)
 
 
-def delete_requests_with_ids(ids):
+@capp.task
+def delete_requests_with_ids_task(ids):
     delete_all_with_ids(ServiceRequest, ids)
     cache_service_requests()
+def delete_requests_with_ids(ids):
+    delete_requests_with_ids_task.delay(ids)
 
 
-def update_professional_status(ids, approval):
+@capp.task
+def update_professional_status_task(ids, approval):
     profs = get_all(Professional, ids=ids)
     for prof in profs:
         prof.approval = approval
     db.session.commit()
     cache_professionals()
+def update_professional_status(ids, approval):
+    update_professional_status_task.delay(ids, approval)
 
 
-def update_customer_status(ids, status):
+@capp.task
+def update_customer_status_task(ids, status):
     customers = get_all(Customer, ids=ids)
     for customer in customers:
         customer.status = status
     db.session.commit()
     cache_customers()
+def update_customer_status(ids, status):
+    update_customer_status_task.delay(ids, status)
 
 
-def update_customer_profile(id, editdata):
+@capp.task
+def update_customer_profile_task(id, editdata):
     customer = get_with_id(Customer, id)
 
     if customer.user.fullname != editdata.get('fullname'):
@@ -394,40 +450,37 @@ def update_customer_profile(id, editdata):
     
     db.session.commit()
     cache_customers()
+def update_customer_profile(id, editdata):
+    update_customer_profile_task.delay(id, editdata)
 
 
-def update_professional_profile(id, editdata):
+@capp.task
+def update_professional_profile_task(id, editdata):
     professional = get_with_id(Professional, id)
-
     if professional.user.fullname != editdata.get('fullname'):
         professional.user.fullname = editdata.get('fullname')
-    
     if professional.user.username != editdata.get('username'):
         professional.user.username = editdata.get('username')
-    
     if professional.user.email != editdata.get('email'):
         professional.user.email = editdata.get('email')
-    
     if professional.experience != editdata.get('experience'):
         professional.experience = editdata.get('experience')
-    
     if professional.description != editdata.get('description'):
         professional.description = editdata.get('description')
-    
     if professional.contact != editdata.get('contact'):
         professional.contact = editdata.get('contact')
-    
     if professional.address != editdata.get('address'):
         professional.address = editdata.get('address')
-    
     if professional.pincode != editdata.get('pincode'):
         professional.pincode = editdata.get('pincode')
-    
     db.session.commit()
     cache_professionals()
+def update_professional_profile(id, editdata):
+    update_professional_profile_task.delay(id, editdata)
 
 
-def update_service_with_id(id, editdata):
+@capp.task
+def update_service_with_id_task(id, editdata):
     service = get_with_id(Service, id)
     service.name = editdata.get("name")
     service.description = editdata.get("description")
@@ -435,9 +488,12 @@ def update_service_with_id(id, editdata):
     service.timereq = editdata.get("timereq")
     db.session.commit()
     cache_services()
+def update_service_with_id(id, editdata):
+    update_service_with_id_task.delay(id, editdata)
 
 
-def update_service_request_with_id(id, editdata):
+@capp.task
+def update_service_request_with_id_task(id, editdata):
     service_request = get_with_id(ServiceRequest, id)
     service_request.remarks = editdata.get("remarks")
     if not (editdata.get('completed') == 'In-Progess'):
@@ -445,9 +501,12 @@ def update_service_request_with_id(id, editdata):
         service_request.completed = completed
     db.session.commit()
     cache_service_requests()
+def update_service_request_with_id(id, editdata):
+    update_service_request_with_id_task.delay(id, editdata)
 
 
-def close_service_request_with_id(id, editdata):
+@capp.task
+def close_service_request_with_id_task(id, editdata):
     service_request = get_with_id(ServiceRequest, id)
     service_request.rating = editdata.get('rating')
     service_request.remarks = editdata.get('remarks')
@@ -455,22 +514,32 @@ def close_service_request_with_id(id, editdata):
     service_request.completed = datetime.now()
     db.session.commit()
     cache_service_requests()
+def close_service_request_with_id(id, editdata):
+    close_service_request_with_id_task.delay(id, editdata)
 
-def accept_service_request_with_pid(id, editdata):
+
+@capp.task
+def accept_service_request_with_pid_task(id, editdata):
     service_request = get_with_id(ServiceRequest, id)
     accepting_professional = get_with_id(Professional, int(editdata.get('pid')))
     service_request.professional_id = accepting_professional.id
     service_request.status = "ASSIGNED"
     db.session.commit()
     cache_service_requests()
+def accept_service_request_with_pid(id, editdata):
+    accept_service_request_with_pid_task.delay(id, editdata)
 
-def reject_service_request_with_pid(id, editdata):
+
+@capp.task
+def reject_service_request_with_pid_task(id, editdata):
     service_request = get_with_id(ServiceRequest, id)
     rejecting_professional = get_with_id(Professional, int(editdata.get('pid')))
     service_request.professional_id = rejecting_professional.id
     service_request.status = "REQUESTED"
     db.session.commit()
     cache_service_requests()
+def reject_service_request_with_pid(id, editdata):
+    reject_service_request_with_pid_task.delay(id, editdata)
 
 
 
@@ -480,12 +549,15 @@ def delete_with_id(model, pkid):
     db.session.commit()
 
 
-def delete_service_with_id(id):
+@capp.task
+def delete_service_with_id_task(id):
     delete_with_id(Service, id)
+def delete_service_with_id(id):
+    delete_service_with_id_task.delay(id)
 
 
-
-def add_customer_user(user_data, cust_data):
+@capp.task
+def add_customer_user_task(user_data, cust_data):
     user = User(**user_data)
     customer = Customer(**cust_data)
     customer.user = user
@@ -494,9 +566,12 @@ def add_customer_user(user_data, cust_data):
     db.session.commit()
     cache_users()
     cache_customers()
+def add_customer_user(user_data, cust_data):
+    add_customer_user_task.delay(user_data, cust_data)
 
 
-def add_service(service_data):
+@capp.task
+def add_service_task(service_data):
     service = Service(**service_data)
     if service.service_exists():
         return { "added": False, "message": "Service Already Exists" }
@@ -504,9 +579,12 @@ def add_service(service_data):
     db.session.commit()
     cache_services()
     return { "added": True, "message": "Service Added Successfully" }
+def add_service(service_data):
+    add_service_task.delay(service_data)
 
 
-def add_service_request(cid, sid, pid):
+@capp.task
+def add_service_request_task(cid, sid, pid):
     service_request = ServiceRequest(
         customer_id = cid,
         service_id = sid,
@@ -515,8 +593,12 @@ def add_service_request(cid, sid, pid):
     db.session.add(service_request)
     db.session.commit()
     cache_service_requests()
+def add_service_request(cid, sid, pid):
+    add_service_request_task.delay(cid, sid, pid)
 
-def add_professional_user(user_data, prof_data):
+
+@capp.task
+def add_professional_user_task(user_data, prof_data):
     user = User(**user_data)
     professional = Professional(**prof_data)
     professional.user = user
@@ -525,6 +607,8 @@ def add_professional_user(user_data, prof_data):
     db.session.commit()
     cache_users()
     cache_professionals()
+def add_professional_user(user_data, prof_data):
+    add_professional_user_task.delay(user_data, prof_data)
 
 
 
