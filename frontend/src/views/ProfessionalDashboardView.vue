@@ -23,8 +23,11 @@ async function initialLoad() {
   } else {
     message.value = 'Professional Not Found';
   }
+  if (professional.value.approval === 'REJECTED') {
+    router.push({ name: 'professional_suspension_notice' });
+  }
   if (!sameLoggedinUser(professional.value.user.email)) {
-    router.push({ name: 'access_not_allowed' });
+    router.push({ name: 'professional_access_not_allowed' });
   }
 }
 
@@ -42,9 +45,9 @@ onMounted(initialLoad);
       <!-- Header / Logo / Site -->
       <nav class="navbar bg-primary">
         <div class="navbar-start">
-          <RouterLink to="/testing" class="btn btn-lg btn-ghost text-2xl">
+          <a href="#" class="btn btn-lg btn-ghost text-2xl">
             Welcome, {{ professionalFound ? professional.user.fullname : 'Error' }} <span class="opacity-60">[PROFESSIONAL]</span>
-          </RouterLink>
+          </a>
         </div>
 
         <div class="navbar-center">

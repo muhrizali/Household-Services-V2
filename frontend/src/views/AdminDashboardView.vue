@@ -7,7 +7,7 @@ const router = useRouter();
 
 function initialLoad() {
   if (!sameLoggedinUser("admin@hhs.org")) {
-    router.push({ name: 'access_not_allowed' });
+    router.push({ name: 'user_access_not_allowed' });
   }
 }
 

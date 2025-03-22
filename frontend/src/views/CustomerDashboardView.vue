@@ -22,8 +22,11 @@ async function initialLoad() {
   } else {
     message.value = 'Customer Not Found';
   }
+  if (customer.value.status === 'BLOCKED') {
+    router.push({ name: 'customer_suspension_notice' });
+  }
   if (!sameLoggedinUser(customer.value.user.email)) {
-    router.push({ name: 'access_not_allowed' });
+    router.push({ name: 'customer_access_not_allowed' });
   }
 }
 
@@ -41,9 +44,9 @@ onMounted(initialLoad);
     <!-- Header / Logo / Site -->
     <nav class="navbar bg-primary">
       <div class="navbar-start">
-        <RouterLink to="/testing" class="btn btn-lg btn-ghost text-2xl">
+        <a href="#" class="btn btn-lg btn-ghost text-2xl">
           Welcome, {{ customerFound ? customer.user.fullname : 'Error' }} <span class="opacity-60">[CUSTOMER]</span>
-        </RouterLink>
+        </a>
       </div>
 
       <div class="navbar-center">

@@ -2,12 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginForm from '@/components/LoginForm.vue';
 import CustomerRegisterForm from '@/components/CustomerRegisterForm.vue';
 import ProfessionalRegisterForm from '@/components/ProfessionalRegisterForm.vue';
-import AdminHome from '@/components/admin/AdminHome.vue';
 import Testing from '@/components/Testing.vue';
 import DashboardView from '@/views/DashboardView.vue';
 import LandingHomeView from '@/views/LandingHomeView.vue';
 import CustomerHome from '@/components/customer/CustomerHome.vue';
 import ProfessionalHome from '@/components/professionals/ProfessionalHome.vue';
+import AdminHome from '@/components/admin/AdminHome.vue';
+import AdminSearch from '@/components/admin/AdminSearch.vue';
+import AdminReports from '@/components/admin/AdminReports.vue';
 import AdminServiceDetails from '@/components/admin/AdminServiceDetails.vue';
 import AdminProfessionalDetails from '@/components/admin/AdminProfessionalDetails.vue';
 import AdminCustomerDetails from '@/components/admin/AdminCustomerDetails.vue';
@@ -22,7 +24,6 @@ import AdminCustomerBlock from '@/components/admin/AdminCustomerBlock.vue';
 import AdminDashboardView from '@/views/AdminDashboardView.vue';
 import AdminRequestEdit from '@/components/admin/AdminRequestEdit.vue';
 import AdminRequestDelete from '@/components/admin/AdminRequestDelete.vue';
-import AdminSearch from '@/components/admin/AdminSearch.vue';
 import CustomerDashboardView from '@/views/CustomerDashboardView.vue';
 import CustomerProfileDetails from '@/components/customer/CustomerProfileDetails.vue';
 import CustomerRequestDetails from '@/components/customer/CustomerRequestDetails.vue';
@@ -41,7 +42,10 @@ import ProfessionalRequestDetails from '@/components/professionals/ProfessionalR
 import ProfessionalRequestAccept from '@/components/professionals/ProfessionalRequestAccept.vue';
 import ProfessionalRequestReject from '@/components/professionals/ProfessionalRequestReject.vue';
 import AccessNotAllowed from '@/components/AccessNotAllowed.vue';
-import AdminReports from '@/components/admin/AdminReports.vue';
+import SuspensionNotice from '@/components/SuspensionNotice.vue';
+import CustomerDashboardNonLoginView from '@/views/CustomerDashboardNonLoginView.vue';
+import ProfessionalDashboardNonLoginView from '@/views/ProfessionalDashboardNonLoginView.vue';
+import NonLoginView from '@/views/NonLoginView.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -60,10 +64,48 @@ const router = createRouter({
           name: "login",
           component: LoginForm,
         },
+      ]
+    },
+    {
+      path: '/user',
+      component: NonLoginView,
+      children: [
         {
-          path: "access-not-allowed",
-          name: "access_not_allowed",
+          path: '/access-not-allowed',
+          name: 'user_access_not_allowed',
+          component: AccessNotAllowed
+        },
+      ]
+    },
+    {
+      path: '/user/customer',
+      component: CustomerDashboardNonLoginView,
+      children: [
+        {
+          path: 'access-not-allowed',
+          name: 'customer_access_not_allowed',
           component: AccessNotAllowed,
+        },
+        {
+          path: 'suspension-notice',
+          name: 'customer_suspension_notice',
+          component: SuspensionNotice,
+        },
+      ]
+    },
+    {
+      path: '/user/professional',
+      component: ProfessionalDashboardNonLoginView,
+      children: [
+        {
+          path: 'access-not-allowed',
+          name: 'professional_access_not_allowed',
+          component: AccessNotAllowed,
+        },
+        {
+          path: 'suspension-notice',
+          name: 'professional_suspension_notice',
+          component: SuspensionNotice,
         },
       ]
     },
