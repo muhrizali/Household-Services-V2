@@ -3,12 +3,17 @@ from sqlalchemy import select, delete
 from sqlalchemy.sql import or_, and_
 from bcrypt import gensalt, hashpw, checkpw
 from datetime import datetime
+from flask import url_for
 from flask_jwt_extended import create_access_token
 from redis import Redis
 from apps import celery_app as capp
 from celery import Celery
 from celery.schedules import crontab
 from datetime import datetime
+from os import listdir, remove
+from mailcreds import EMAIL_ADDRESS, EMAIL_PASSWORD
+from email.message import EmailMessage
+import smtplib
 import json, csv
 
 
@@ -380,6 +385,39 @@ def generate_csv_report():
     generate_csv_report_task.delay()
 
 
+def get_csv_report_urls():
+    server_url = 'http://localhost:5000'
+    reports_dir = 'static/reports/'
+    report_names = listdir(reports_dir)
+    urls = []
+    for i in range(len(report_names)):
+        url = server_url + url_for('static', filename=f'reports/{report_names[i]}')
+        ind = i + 1
+        urls.append({ 'id': ind, 'url': url, 'name': report_names[i] })
+    return urls
+
+
+def delete_csv_report(name):
+    reports_dir = 'static/reports/'
+    remove(reports_dir + name)
+
+
+# SENDING EMAILS
+@capp.task
+def send_email_to_task(professional_email, customer_name, service_name):
+    msg = EmailMessage()
+    msg['Subject'] = 'New Service Request for You'
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = professional_email
+    msg.set_content(f'Customer "{customer_name}" created Service Request "{service_name}" to you. Kindly respond to it as soon as possible.')
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        smtp.send_message(msg)
+def send_email_to(professional_email, customer_name, service_name):
+    send_email_to_task.delay(professional_email, customer_name, service_name)
+
+
+
 # MANAGEMENT DB FUNCTIONS
 def delete_all_with_ids(model, ids):
     sql = delete(model).where(model.id.in_(ids))
@@ -592,6 +630,12 @@ def add_service_request_task(cid, sid, pid):
     )
     db.session.add(service_request)
     db.session.commit()
+    
+    professional_email = service_request.get_professional()['user']['email']
+    customer_name = service_request.customer.user.fullname
+    service_name = service_request.service.name
+    send_email_to(professional_email, customer_name, service_name)
+    
     cache_service_requests()
 def add_service_request(cid, sid, pid):
     add_service_request_task.delay(cid, sid, pid)

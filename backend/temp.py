@@ -461,4 +461,9 @@ def rm_data():
 
 # create_dummy_data()
 # rm_data()
-get_data()
+# get_data()
+
+## NEW
+from fns import send_email_to
+
+# send_email_to('notattinot@gmail.com', 'Hamdaan Ali', 'AC Repair')

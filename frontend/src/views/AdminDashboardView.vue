@@ -37,6 +37,7 @@ function onLogoutClick() {
 
             <li><RouterLink :to="{ name: 'admin_home' }" class="btn btn-ghost">Home</RouterLink></li>
             <li><RouterLink :to="{ name: 'admin_search' }" class="btn btn-ghost">Search</RouterLink></li>
+            <li><RouterLink :to="{ name: 'admin_reports' }" class="btn btn-ghost">Reports</RouterLink></li>
           </ul>
         </div>
         <div class="navbar-end">

@@ -356,6 +356,21 @@ class SearchAPI(Resource):
             return jsonify({ "found": True, "type": "SERVICE_REQUEST", "results": results })
 
 
+class ReportAPI(Resource):
+    def get(self):
+        report_urls = get_csv_report_urls()
+        return jsonify({ 'reports': report_urls })
+    
+    def post(self):
+        generate_csv_report()
+        return jsonify({ 'added': True, 'msg': 'report generated' })
+
+    def delete(self):
+        req = request.args
+        report_name = req.get('name')
+        delete_csv_report(report_name)
+        return jsonify({ 'deleted': True, 'msg': 'report deleted' })
+
         
 
         
@@ -387,7 +402,7 @@ api.add_resource(ServiceAPI, "/api/service")
 api.add_resource(ServiceRequestAPI, "/api/request")
 
 api.add_resource(SearchAPI, "/api/search")
-
+api.add_resource(ReportAPI, "/api/report")
 # testing APIs
 api.add_resource(TestAPI, "/api/test")
 

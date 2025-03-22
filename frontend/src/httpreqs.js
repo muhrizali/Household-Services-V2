@@ -36,8 +36,12 @@ async function postAPI({ url, data }) {
     return await axios.post(url, data, baseConfig);
 }
 
+async function simplePAPI({ url }) {
+    return await axios.post(url, baseConfig);
+}
+
 async function putAPI({ url, data }) {
     return await axios.put(url, data, baseConfig);
 }
 
-export { getAPI, getWithParamsAPI, postAPI, putAPI, deleteAPI };
+export { getAPI, getWithParamsAPI, postAPI, putAPI, deleteAPI, simplePAPI };

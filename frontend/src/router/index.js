@@ -41,6 +41,7 @@ import ProfessionalRequestDetails from '@/components/professionals/ProfessionalR
 import ProfessionalRequestAccept from '@/components/professionals/ProfessionalRequestAccept.vue';
 import ProfessionalRequestReject from '@/components/professionals/ProfessionalRequestReject.vue';
 import AccessNotAllowed from '@/components/AccessNotAllowed.vue';
+import AdminReports from '@/components/admin/AdminReports.vue';
 // import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -93,6 +94,16 @@ const router = createRouter({
               path: "",
               name: "admin_home",
               component: AdminHome
+            },
+            {
+              path: "search/",
+              name: "admin_search",
+              component: AdminSearch
+            },
+            {
+              path: "report/",
+              name: "admin_reports",
+              component: AdminReports
             },
             {
               path: "service/details/:id",
@@ -158,11 +169,6 @@ const router = createRouter({
               path: "request/delete/:id",
               name: "admin_request_delete",
               component: AdminRequestDelete
-            },
-            {
-              path: "search/",
-              name: "admin_search",
-              component: AdminSearch
             },
           ]
         },
