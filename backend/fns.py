@@ -535,7 +535,7 @@ def update_service_request_with_id_task(id, editdata):
     service_request = get_with_id(ServiceRequest, id)
     service_request.remarks = editdata.get("remarks")
     if not (editdata.get('completed') == 'In-Progess'):
-        completed = datetime.strptime(editdata.get("completed"), "%Y-%m-%d %H:%M:%S")
+        completed = datetime.strptime(editdata.get("completed"), "%Y-%m-%dT%H:%M:%S")
         service_request.completed = completed
     db.session.commit()
     cache_service_requests()
@@ -611,12 +611,10 @@ def add_customer_user(user_data, cust_data):
 @capp.task
 def add_service_task(service_data):
     service = Service(**service_data)
-    if service.service_exists():
-        return { "added": False, "message": "Service Already Exists" }
     db.session.add(service)
     db.session.commit()
     cache_services()
-    return { "added": True, "message": "Service Added Successfully" }
+    # return { "added": True, "message": "Service Added Successfully" }
 def add_service(service_data):
     add_service_task.delay(service_data)
 

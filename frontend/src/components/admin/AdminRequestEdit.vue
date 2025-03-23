@@ -69,7 +69,6 @@ onMounted(initialLoad);
         <div class="card card-bordered border-2 border-primary-content/25 w-2/3">
             <div class="card-body">
                 <h2 class="card-title text-lg">EDIT SERVICE REQUEST</h2>
-                <!-- {{ serviceRequest }} -->
 
                 <div v-show="message"
                     class="bg-warning font-semibold p-4 my-4 rounded-md border-2 border-warning-content/50">
@@ -129,9 +128,13 @@ onMounted(initialLoad);
                                         <label for="remarks">REMARKS:</label>
                                     </td>
                                     <td>
-                                        <textarea name="remarks" id="remarks"
-                                            class="textarea w-full textarea-bordered border-2" rows="4"
-                                            v-model="remarks"></textarea>
+                                        <textarea
+                                        v-model="remarks" 
+                                        id="remarks"
+                                        name="remarks" 
+                                        class="textarea w-full textarea-bordered border-2"
+                                        placeholder="Remarks for the service" 
+                                        rows="4"></textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -139,8 +142,11 @@ onMounted(initialLoad);
                                         <label for="completed">COMPLETED:</label>
                                     </td>
                                     <td>
-                                        <input type="text" id="completed" class="input w-full input-bordered border-2"
-                                            v-model="completed">
+                                        <input 
+                                        v-model="completed" 
+                                        id="completed" 
+                                        type="datetime-local"
+                                        class="" />
                                     </td>
                                 </tr>
                             </tbody>

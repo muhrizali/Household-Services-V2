@@ -395,9 +395,9 @@ class ServiceRequest(db.Model):
 
     def completed_time(self):
         if self.completed:
-            return self.completed.strftime("%Y-%m-%d %H:%M:%S")
+            return self.completed.strftime("%Y-%m-%dT%H:%M:%S")
         else:
-            return "In-Progess"
+            return ''
 
     # def service(self):
     #     serv = get_with_id(Service, self.service_id)

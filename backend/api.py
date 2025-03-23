@@ -198,10 +198,15 @@ class ServiceAPI(Resource):
     
     def post(self):
         new_service_data = request.get_json()
-        try:
-            return jsonify(add_service(new_service_data))
-        except:
-            return { "added": False, "message": "Error While Adding Service" }, 400
+        current_services = get_all_services()
+        def extract_names(service):
+            return service.get('name')
+        current_service_names = list(map(extract_names, current_services))
+        if new_service_data.get('name') in current_service_names:
+            return jsonify({ 'added': False })
+        
+        add_service(new_service_data)
+        return jsonify({ 'added': True })
     
     def delete(self):
         req = request.args

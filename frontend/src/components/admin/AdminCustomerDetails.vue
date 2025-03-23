@@ -29,37 +29,37 @@ onMounted(async function () {
         <div class="card-body">
             <div v-if="customerFound">
                 <h2 class="card-title text-lg">CUSTOMER DETAILS:</h2>
-                <table class="table table-lg">
+                <table class="table table-sm">
                     <tbody>
                         <tr>
-                            <td class="text-lg font-bold underline">ID:</td>
+                            <td class="text-lg font-bold ">ID:</td>
                             <td>{{ customer.id }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">NAME:</td>
+                            <td class="text-lg font-bold">NAME:</td>
                             <td>{{ customer.user.fullname }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">EMAIL:</td>
+                            <td class="text-lg font-bold">EMAIL:</td>
                             <td>{{ customer.user.email }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">STATUS:</td>
+                            <td class="text-lg font-bold">STATUS:</td>
                             <td>
                                 <span v-if="customer.status === 'ACTIVE'" class="badge badge-lg badge-success">{{ customer.status }}</span>
                                 <span v-else class="badge badge-lg badge-error">{{ customer.status }}</span>
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">ADDRESS:</td>
+                            <td class="text-lg font-bold">ADDRESS:</td>
                             <td>{{ customer.address }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">PIN CODE:</td>
+                            <td class="text-lg font-bold">PIN CODE:</td>
                             <td>{{ customer.pincode }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">JOINED:</td>
+                            <td class="text-lg font-bold">JOINED:</td>
                             <td>{{ customer.created }}</td>
                         </tr>
                     </tbody>

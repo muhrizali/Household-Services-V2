@@ -13,13 +13,13 @@ const professional = ref({});
 const message = ref('');
 
 async function initialLoad() {
-  const response = await getAPI({ url: '/api/professional', params: { 'id': professionalID } });
-  if (response.data.found) {
-    professionalFound.value = true;
-    professional.value = response.data.professional;
-  } else {
-    message.value = 'Professional Not Found';
-  }
+    const response = await getAPI({ url: '/api/professional', params: { 'id': professionalID } });
+    if (response.data.found) {
+        professionalFound.value = true;
+        professional.value = response.data.professional;
+    } else {
+        message.value = 'Professional Not Found';
+    }
 }
 
 onMounted(initialLoad);
@@ -33,47 +33,57 @@ onMounted(initialLoad);
                 <table class="table table-sm">
                     <tbody>
                         <tr>
-                            <td class="text-lg font-bold underline">ID:</td>
+                            <td class="text-lg font-bold">ID:</td>
                             <td>{{ professional.id }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">NAME:</td>
+                            <td class="text-lg font-bold">NAME:</td>
                             <td>{{ professional.user.fullname }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">EMAIL:</td>
+                            <td class="text-lg font-bold">EMAIL:</td>
                             <td>{{ professional.user.email }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">CONTACT:</td>
+                            <td class="text-lg font-bold">CONTACT:</td>
                             <td>{{ professional.contact }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">SERVICE:</td>
+                            <td class="text-lg font-bold">SERVICE:</td>
                             <td>{{ professional.service.name }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">EXPERIENCE:</td>
+                            <td class="text-lg font-bold">EXPERIENCE:</td>
                             <td>{{ professional.experience }} Years</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">RATING:</td>
+                            <td class="text-lg font-bold">APPROVAL:</td>
+                            <td>
+                                <span v-if="professional.approval === 'REJECTED'" class="badge badge-lg badge-error">{{
+                                    professional.approval }}</span>
+                                <span v-else-if="professional.approval === 'PENDING'" class="badge badge-lg border-dashed">{{
+                                    professional.approval }}</span>
+                                <span v-else class="badge badge-lg badge-success">{{ professional.approval }}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-lg font-bold">RATING:</td>
                             <td>{{ professional.avg_rating }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">STATUS:</td>
+                            <td class="text-lg font-bold">STATUS:</td>
                             <td>{{ professional.approval }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">ADDRESS:</td>
+                            <td class="text-lg font-bold">ADDRESS:</td>
                             <td>{{ professional.address }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">PIN CODE:</td>
+                            <td class="text-lg font-bold">PIN CODE:</td>
                             <td>{{ professional.pincode }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">JOINED:</td>
+                            <td class="text-lg font-bold">JOINED:</td>
                             <td>{{ professional.created }}</td>
                         </tr>
                     </tbody>

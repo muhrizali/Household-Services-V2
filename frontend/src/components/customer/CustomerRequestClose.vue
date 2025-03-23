@@ -81,35 +81,35 @@ onMounted(initialLoad);
                 <table class="table">
                     <tbody>
                         <tr>
-                            <td class="text-lg font-bold underline">REQUEST ID:</td>
+                            <td class="text-lg font-bold">REQUEST ID:</td>
                             <td>{{ serviceRequest.id }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">NAME:</td>
+                            <td class="text-lg font-bold">NAME:</td>
                             <td>{{ serviceRequest.service.name }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">DESCRIPTION:</td>
+                            <td class="text-lg font-bold">DESCRIPTION:</td>
                             <td>{{ serviceRequest.service.description }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">PRICE:</td>
+                            <td class="text-lg font-bold">PRICE:</td>
                             <td>{{ serviceRequest.service.price }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">REQUESTED:</td>
+                            <td class="text-lg font-bold">REQUESTED:</td>
                             <td>{{ serviceRequest.created }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">PROFESSIONAL ID:</td>
+                            <td class="text-lg font-bold">PROFESSIONAL ID:</td>
                             <td>{{ serviceRequest.professional.id }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">PROFESSIONAL:</td>
+                            <td class="text-lg font-bold">PROFESSIONAL:</td>
                             <td>{{ serviceRequest.professional.user.fullname }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">CONTACT:</td>
+                            <td class="text-lg font-bold">CONTACT:</td>
                             <td>{{ serviceRequest.professional.contact }}</td>
                         </tr>
                     </tbody>

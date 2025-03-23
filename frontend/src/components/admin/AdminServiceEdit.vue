@@ -71,7 +71,7 @@ onMounted(async function () {
                 </div>
 
                 <div v-if="serviceFound">
-                    <form class="form-control">
+                    <form @submit.prevent="onEditClick" class="form-control">
                         <table class="table table-sm">
                             <tbody>
                                 <tr>
@@ -79,7 +79,13 @@ onMounted(async function () {
                                         <label for="name">NAME:</label>
                                     </td>
                                     <td>
-                                        <input id="name" type="text" class="input w-full input-bordered border-2" v-model="name">
+                                        <input 
+                                        v-model="name"
+                                        id="name" 
+                                        type="text"
+                                        required 
+                                        class="input w-full input-bordered border-2"
+                                        placeholder="Clearning, Cooking, Repair" /> 
                                     </td>
                                 </tr>
                                 <tr>
@@ -87,9 +93,15 @@ onMounted(async function () {
                                         <label for="description">DESCRIPTION:</label>
                                     </td>
                                     <td>
-                                        <textarea name="description" id="description"
-                                            class="textarea w-full textarea-bordered border-2"
-                                            rows="4">{{ description }}</textarea>
+                                        <textarea
+                                        v-model="description" 
+                                        name="description" 
+                                        id="description"
+                                        required
+                                        class="textarea w-full textarea-bordered border-2"
+                                        placeholder="Your Service Description"
+                                        rows="4">
+                                        </textarea>
                                     </td>
                                 </tr>
                                 <tr>
@@ -97,8 +109,14 @@ onMounted(async function () {
                                         <label for="price">PRICE:</label>
                                     </td>
                                     <td>
-                                        <input id="price" type="text" class="input w-full input-bordered border-2"
-                                            v-model="price">
+                                        <input 
+                                        v-model="price"
+                                        id="price" 
+                                        type="number"
+                                        required
+                                        min="100" 
+                                        class="input w-full input-bordered border-2"
+                                        placeholder="100, 300, 500" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -106,14 +124,20 @@ onMounted(async function () {
                                         <label for="timereq">TIME REQUIRED (in hours):</label>
                                     </td>
                                     <td>
-                                        <input id="timereq" type="number" class="input w-full input-bordered border-2"
-                                            v-model="timereq">
+                                        <input 
+                                        v-model="timereq"
+                                        id="timereq" 
+                                        type="number"
+                                        required
+                                        min="1" 
+                                        class="input w-full input-bordered border-2"
+                                        placeholder="Estimated Hours" />
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="flex items-center justify-center mt-4">
-                            <button @click.prevent="onEditClick" class="btn btn-block btn-lg btn-warning">EDIT</button>
+                            <input type="submit" value="EDIT" class="btn btn-block btn-lg btn-warning" />
                         </div>
                     </form>
                 </div>

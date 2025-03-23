@@ -89,8 +89,8 @@ onMounted(async function () {
                         <th>ID</th>
                         <th>CUSTOMER</th>
                         <th>SERVICE</th>
-                        <th>PROFESSIONAL</th>
                         <th>REQUESTED</th>
+                        <th>COMPLETED</th>
                         <th>STATUS</th>
                     </tr>
                 </thead>
@@ -106,11 +106,12 @@ onMounted(async function () {
                         </td>
                         <td>{{ request.customer.user.fullname }}</td>
                         <td>{{ request.service.name }}</td>
-                        <td>
+                        <!-- <td>
                             <span v-if="request.status === 'REQUESTED'">NOT ASSIGNED</span>
                             <span v-else>{{ request.professional.user.fullname }}</span>
-                        </td>
+                        </td> -->
                         <td>{{ request.created }}</td>
+                        <td>{{ request.completed }}</td>
                         <td>
                             <span v-if="request.status === 'REQUESTED'"
                                 class="badge badge-lg badge-error">REQUESTED</span>

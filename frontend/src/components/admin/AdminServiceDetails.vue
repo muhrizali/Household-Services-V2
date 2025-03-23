@@ -11,7 +11,7 @@ const message = ref("");
 
 onMounted(async function () {
     try {
-        const response = await getWithParamsAPI({ url: "api/service", params: { "id": serviceID } });
+        const response = await getWithParamsAPI({ url: "/api/service", params: { "id": serviceID } });
         if (response.data.found) {
             serviceFound.value = true;
             service.value = response.data.service;
@@ -30,30 +30,30 @@ onMounted(async function () {
         <div class="card-body">
             <h2 class="card-title text-lg">Service Details:</h2>
             <div v-if="serviceFound">
-                <table class="table table-lg">
+                <table class="table table-sm">
                     <tbody>
                         <tr>
-                            <td class="text-lg font-bold underline">ID:</td>
+                            <td class="text-lg font-bold">ID:</td>
                             <td>{{ service.id }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">NAME:</td>
+                            <td class="text-lg font-bold">NAME:</td>
                             <td>{{ service.name }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">DESCRIPTION:</td>
+                            <td class="text-lg font-bold">DESCRIPTION:</td>
                             <td>{{ service.description }}</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">TIME REQUIRED (Approx.):</td>
+                            <td class="text-lg font-bold">TIME REQUIRED:</td>
                             <td>{{ service.timereq }} Hours</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">PRICE:</td>
+                            <td class="text-lg font-bold">PRICE:</td>
                             <td>{{ service.price }} Rupees</td>
                         </tr>
                         <tr>
-                            <td class="text-lg font-bold underline">CREATED:</td>
+                            <td class="text-lg font-bold">CREATED:</td>
                             <td>{{ service.created }}</td>
                         </tr>
                     </tbody>
